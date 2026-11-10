@@ -505,6 +505,13 @@ body[data-screen='gallery'] #gallery {
   justify-self: end;
 }
 
+.booth-back {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: center;
+  justify-self: start;
+}
+
 .gallery-btn .count {
   min-width: 40px;
   height: 40px;
@@ -518,6 +525,7 @@ body[data-screen='gallery'] #gallery {
 }
 
 body[data-counting] .picker,
+body[data-counting] .booth-back,
 body[data-counting] .gallery-btn,
 body[data-counting] .shutter-row {
   opacity: 0.2;
@@ -1303,8 +1311,15 @@ body[data-theme='kawaii'] .result-power {
     padding: 0 18px;
   }
 
-  /* only icon and count fit beside the centred shutter */
-  .gallery-btn > span:not(.count) {
+  .booth-back {
+    grid-column: 1;
+    grid-row: 3;
+    padding: 0 18px;
+  }
+
+  /* only icons (and the count) fit beside the centred shutter */
+  .gallery-btn > span:not(.count),
+  .booth-back > span {
     display: none;
   }
 

@@ -354,10 +354,15 @@ $('binder').addEventListener('click', (e) => {
 
 $('gallery-back').addEventListener('click', () => show('booth'));
 $('gallery-first').addEventListener('click', () => show('booth'));
-$('change-theme').addEventListener('click', () => {
+/** Back to the start screen to pick another theme; the camera keeps running. */
+function goToThemes() {
+  if (state.counting) return;
   delete document.body.dataset.theme;
   show('start');
-});
+}
+
+$('change-theme').addEventListener('click', goToThemes);
+$('booth-back').addEventListener('click', goToThemes);
 $('open-gallery').addEventListener('click', () => !state.counting && show('gallery'));
 $('share-all').addEventListener('click', () =>
   shareFiles(galleryRecords.map((r) => cardFile(r.image, r.number))).catch(() => toast('Billederne kunne ikke deles.')),
@@ -417,6 +422,7 @@ async function boot() {
   $('result-gallery').innerHTML = `${uiIcon('cards')}<span>Samling</span>`;
   $('gallery-back').innerHTML = `${uiIcon('back')}<span>Tilbage</span>`;
   $('change-theme').innerHTML = `${uiIcon('palette')}<span>Skift tema</span>`;
+  $('booth-back').innerHTML = `${uiIcon('back')}<span>Skift tema</span>`;
   $('share-all').innerHTML = `${uiIcon('share')}<span>Del alle</span>`;
   $('viewer-print').innerHTML = `${uiIcon('print')}<span>Print</span>`;
   $('viewer-share').innerHTML = `${uiIcon('share')}<span>Del</span>`;
