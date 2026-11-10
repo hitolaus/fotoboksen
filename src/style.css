@@ -32,6 +32,29 @@ body {
   overscroll-behavior: none;
 }
 
+/* The page's own background, behind the app layer, is black; the themes' backgrounds are painted by <main>. */
+html {
+  background-color: #000000;
+}
+
+/*
+ * An invisible strip fixed to the top edge. Without it, Safari and the Home Screen app's status
+ * bar keep the colour of the screen the app opened on (the start screen's navy) for every theme;
+ * with it, the bar takes the colour of whatever theme is showing. Found by testing on the iPad,
+ * not from documentation: keep it unless that is tested again.
+ */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: transparent;
+  z-index: 100;
+  pointer-events: none;
+}
+
 body {
   background: radial-gradient(120% 90% at 50% 30%, var(--navy-2), var(--navy) 65%);
   background-color: var(--navy);
@@ -95,9 +118,9 @@ body[data-screen='gallery'] #gallery {
  * (inherited from body); main.ts publishes its height as --app-h for the few sizes worked out
  * from the screen height.
  *
- * As a Home Screen app the status bar is solid black (index.html), not see-through: with a
- * see-through bar iPadOS started the page under the bar but gave it a window one bar shorter
- * than the screen, leaving a strip at the bottom that covered the shutter.
+ * As a Home Screen app the status bar is not see-through (index.html): with a see-through bar
+ * iPadOS started the page under the bar but gave it a window one bar shorter than the screen,
+ * leaving a strip at the bottom that covered the shutter.
  */
 main {
   position: fixed;
