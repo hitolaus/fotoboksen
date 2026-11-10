@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { loadThemePref, saveThemePref, themeOf, THEMES, THEME_IDS } from '../src/themes';
+import { loadThemePref, saveThemePref, themeOf, THEMES, THEME_IDS, visibleThemes } from '../src/themes';
+import { PHRASES } from '../src/kawaii';
 import { MAGAZINES, BURSTS, TEASERS, pickCoverStory, magazine } from '../src/magazine';
 import { coverLayout, intersects, COVER_W, COVER_H } from '../src/geometry';
 import { POWERS } from '../src/powers';
@@ -10,10 +11,20 @@ const memory = () => {
 };
 
 describe('themes', () => {
-  it('offers the trading card and the magazine cover', () => {
-    expect(THEME_IDS).toEqual(['kort', 'forside']);
-    expect(THEMES.kort.name).toBe('Samlekort');
-    expect(THEMES.forside.name).toBe('Forsiden');
+  it('offers Samlekort and Kawaii on the start screen, and keeps Forsiden hidden but working', () => {
+    expect(visibleThemes().map((t) => t.id)).toEqual(['kort', 'kawaii']);
+    expect(THEME_IDS).toContain('forside');
+    expect(THEMES.forside.hidden).toBe(true);
+  });
+
+  it('still shows covers taken before Forsiden was hidden as covers', () => {
+    expect(themeOf({ theme: 'forside' })).toBe('forside');
+  });
+
+  it('surprises a kawaii print with a speech-bubble phrase, never the same twice in a row', () => {
+    const first = THEMES.kawaii.surprise('stjerner', () => 0);
+    expect(PHRASES).toContain(first.text);
+    expect(THEMES.kawaii.surprise('stjerner', () => 0, first.text).text).not.toBe(first.text);
   });
 
   it('gives every theme choices with unique ids for the left picker', () => {
@@ -48,8 +59,14 @@ describe('themes', () => {
 describe('theme preference', () => {
   it('remembers the last theme picked', () => {
     const s = memory();
+    saveThemePref(s, 'kawaii');
+    expect(loadThemePref(s)).toBe('kawaii');
+  });
+
+  it('does not offer a hidden theme as the last one used', () => {
+    const s = memory();
     saveThemePref(s, 'forside');
-    expect(loadThemePref(s)).toBe('forside');
+    expect(loadThemePref(s)).toBe('kort');
   });
 
   it('falls back to the trading card when nothing, garbage, or broken storage', () => {

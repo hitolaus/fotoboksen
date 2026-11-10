@@ -17,16 +17,7 @@
     <main>
       <section id="start" class="screen" aria-label="Vælg tema">
         <h1 class="start-title">Fotoboksen</h1>
-        <div class="theme-picks" role="group" aria-label="Tema">
-          <button class="theme-pick" type="button" data-theme-pick="kort">
-            <span class="card-back theme-art"><span class="card-back-title">Samlekort</span></span>
-            <span class="theme-name">Samlekort</span>
-          </button>
-          <button class="theme-pick" type="button" data-theme-pick="forside">
-            <canvas id="cover-tile" class="cover-tile theme-art" aria-hidden="true"></canvas>
-            <span class="theme-name">Forsiden</span>
-          </button>
-        </div>
+        <div id="theme-picks" class="theme-picks" role="group" aria-label="Tema"></div>
         <p class="start-hint">Tryk på et tema for at starte</p>
         <p id="start-error" class="start-error" role="alert" hidden></p>
       </section>

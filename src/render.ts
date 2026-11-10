@@ -1,8 +1,9 @@
 import { ArtPainter, drawChrome, loadCardFonts } from './card';
 import { cardType } from './cardTypes';
-import { drawCoverOverlay, loadCoverFonts } from './cover';
+import { drawCoverOverlay, drawSampleScene, loadCoverFonts } from './cover';
+import { drawPurikuraOver, drawPurikuraUnder, loadPurikuraFonts } from './purikura';
 import type { EffectId } from './effects';
-import { cardLayout, coverLayout, type Rect } from './geometry';
+import { cardLayout, coverLayout, purikuraLayout, type Rect } from './geometry';
 import { THEMES, type Surprise, type ThemeId } from './themes';
 
 export interface RenderInfo {
@@ -38,10 +39,42 @@ export const PAINTERS: Record<ThemeId, Painter> = {
     artRadius: () => 0,
     over: (ctx, s, frameId, info) => drawCoverOverlay(ctx, s, frameId, info),
   },
+  kawaii: {
+    art: (s) => purikuraLayout(s).photo,
+    artRadius: (s) => 46 * s,
+    under: (ctx, s, frameId, info) => drawPurikuraUnder(ctx, s, frameId, info),
+    over: (ctx, s, frameId, info) => drawPurikuraOver(ctx, s, frameId, info),
+  },
 };
 
+/** Sample surprises for the start screen tiles, so each tile looks like a finished picture. */
+const TILE_SURPRISE: Partial<Record<ThemeId, Surprise>> = {
+  forside: { text: 'Ugens største smil', burst: 'NYHED!', teaser: '+ Vind en ballon' },
+  kawaii: { text: 'Kawaii!' },
+};
+
+/** A start-screen tile: the theme's real drawing over a drawn party scene standing in for the camera. */
+export function drawThemeTile(canvas: HTMLCanvasElement, theme: ThemeId, scale: number): void {
+  const { width, height, frames } = THEMES[theme];
+  const p = PAINTERS[theme];
+  canvas.width = Math.round(width * scale);
+  canvas.height = Math.round(height * scale);
+  const ctx = canvas.getContext('2d')!;
+  const info: RenderInfo = { number: 1, date: new Date(), surprise: TILE_SURPRISE[theme] };
+  p.under?.(ctx, scale, frames[0].id, info);
+  const art = p.art(scale);
+  ctx.save();
+  ctx.beginPath();
+  ctx.roundRect(art.x, art.y, art.w, art.h, p.artRadius(scale));
+  ctx.clip();
+  ctx.translate(art.x, art.y);
+  drawSampleScene(ctx, art.w, art.h);
+  ctx.restore();
+  p.over?.(ctx, scale, frames[0].id, info);
+}
+
 export async function loadFonts(): Promise<void> {
-  await Promise.all([loadCardFonts(), loadCoverFonts()]);
+  await Promise.all([loadCardFonts(), loadCoverFonts(), loadPurikuraFonts()]);
 }
 
 /** Renders the finished picture at full size and returns it as a JPEG. */

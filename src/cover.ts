@@ -158,7 +158,7 @@ export function drawCoverOverlay(
 }
 
 /** A drawn party scene that stands in for the camera on the start screen's cover tile. */
-function drawSampleScene(ctx: CanvasRenderingContext2D, w: number, h: number) {
+export function drawSampleScene(ctx: CanvasRenderingContext2D, w: number, h: number) {
   const sky = ctx.createLinearGradient(0, 0, 0, h);
   sky.addColorStop(0, '#8fd3f7');
   sky.addColorStop(1, '#f3e3cf');
@@ -203,18 +203,4 @@ function drawSampleScene(ctx: CanvasRenderingContext2D, w: number, h: number) {
   };
   kid(w * 0.27, '#f1c6a6', '#2e7bd6', '#5a3a22');
   kid(w * 0.73, '#c98c63', '#e8473a', '#1c1c1c');
-}
-
-/** The start screen's door into the cover theme: a real cover, drawn by the same code as the booth. */
-export function drawCoverTile(canvas: HTMLCanvasElement, scale: number): void {
-  const L = coverLayout(scale);
-  canvas.width = Math.round(L.cover.w);
-  canvas.height = Math.round(L.cover.h);
-  const ctx = canvas.getContext('2d')!;
-  drawSampleScene(ctx, canvas.width, canvas.height);
-  drawCoverOverlay(ctx, scale, 'stjerne', {
-    number: 1,
-    date: new Date(),
-    surprise: { text: 'Ugens største smil', burst: 'NYHED!', teaser: '+ Vind en ballon' },
-  });
 }

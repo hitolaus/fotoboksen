@@ -27,7 +27,9 @@ FORM: IMPECCABLE'S PICK, candidate 1 of 7 on my ordered list (holo trading card)
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-## Direction contract: Forsiden (second theme)
+## Direction contract: Forsiden (second theme, hidden)
+
+Hidden from the start screen at the user's request (2026-11-10); the code and old covers keep working.
 
 The app opens on a theme picker (Samlekort or Forsiden); the booth, result, gallery and viewer keep one structure and change world per theme. The contract above still governs Samlekort.
 
@@ -40,5 +42,21 @@ STORY: Kid picks a magazine, taps "Tag forsiden!", countdown over the faces, the
 FIRST VIEWPORT: Centre: one 3:4 cover as tall as the screen allows, live camera full bleed under masthead and issue strip. Left "BLAD" five magazine chips, right "EFFEKT" six chips, bottom centre red "TAG FORSIDEN!" pill, bottom right Samling.
 
 FORM: IMPECCABLE'S PICK, candidate 1 of 7 on my ordered list (magazine cover). seed:d4c55e93e0668a64. Signature move: cover lines stay outside the faces zone (coverLayout.faces); the cover lands on the table on reveal; gloss sweeps the masthead only.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Direction contract: Kawaii (third theme)
+
+User-pinned brief: anime/Japanese kawaii style, vibrant pink and purple, "think Hello Kitty style" (original motifs only, no licensed characters), with stars and speech bubbles. User chose auto-placed sticker sets and a random bubble phrase.
+
+THESIS: The booth becomes a Japanese purikura: your photo prints as a sticker-photo with a polka-dot frame, die-cut stickers and a speech bubble saying something cute. Refuses the plain props overlay.
+
+OWN-WORLD: Purple-to-magenta ground (#6a1b9a to #d81b74) with white polka dots; hot pink shutter (#ff3d9a); white selected chips with purple ink (#5a1290); lemon (#ffe14d) and lilac accents. Stickers are white-outlined die-cuts with gloss and tiny faces (eyes, smile, blush). Mochiy Pop One for display, Baloo 2 for labels.
+
+STORY: Kid picks a sticker set (Stjerner, Hjerter, Kattekat, Sakura, Skyer, Blanding), taps "Tag billede!", countdown, the print pops in like a sticker and the bubble reveals a phrase.
+
+FIRST VIEWPORT: Centre: one 3:4 purikura print, live photo in a rounded white-rimmed window, stickers on the top strip and the frame edges, bubble top right, title band below. Left "Stickers" six chips, right "Effekt" six, pink "Tag billede!" pill, Samling bottom right.
+
+FORM: the direction was pinned by the user's brief, so no concept roll ran and there is no seed. Signature move: stickers never cover faces (purikuraLayout.faces, side stickers reach at most 60px into the photo); the print pops in with a tilt; sparkle glints run over the frame only.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

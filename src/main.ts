@@ -2,18 +2,18 @@ import '@fontsource/lilita-one/latin-400.css';
 import '@fontsource/baloo-2/latin-600.css';
 import '@fontsource/baloo-2/latin-800.css';
 import '@fontsource/anton/latin-400.css';
+import '@fontsource/mochiy-pop-one/latin-400.css';
 import './style.css';
 
 import { EFFECTS, type EffectId } from './effects';
 import { ArtPainter } from './card';
-import { PAINTERS, loadFonts, renderFinal, type RenderInfo } from './render';
-import { drawCoverTile } from './cover';
+import { PAINTERS, drawThemeTile, loadFonts, renderFinal, type RenderInfo } from './render';
 import { startCountdown } from './countdown';
 import { cardNumberLabel } from './powers';
 import { CardStore, type CardRecord } from './store';
 import { uiIcon } from './icons';
 import { COUNTDOWN_SECONDS, RESULT_IDLE_SECONDS } from './config';
-import { THEMES, loadThemePref, saveThemePref, themeOf, isThemeId, type Theme, type ThemeId } from './themes';
+import { THEMES, loadThemePref, saveThemePref, themeOf, isThemeId, visibleThemes, type Theme, type ThemeId } from './themes';
 import {
   beep,
   CameraError,
@@ -306,6 +306,7 @@ function showResult(record: CardRecord) {
   $('result-title').textContent = theme.resultTitle(record.number);
   $('result-label').textContent = theme.resultLabel;
   $('result-power').textContent = record.power;
+  (document.querySelector('.result-power') as HTMLElement).hidden = !theme.resultLabel;
   mountPicture($('result-card'), record, resultUrl, true);
   show('result');
   armResultIdle();
@@ -433,12 +434,32 @@ async function boot() {
   }
   updateGalleryButton();
   await loadFonts();
-  drawCoverTile($<HTMLCanvasElement>('cover-tile'), 0.5);
+  renderThemePicks();
+}
+
+/** One tile per offered theme: the card back for Samlekort, a finished sample picture for the others. */
+function renderThemePicks() {
+  const host = $('theme-picks');
+  host.innerHTML = visibleThemes()
+    .map(
+      (t) => `<button class="theme-pick${t.id === state.theme.id ? ' last' : ''}" type="button" data-theme-pick="${t.id}">
+        ${
+          t.id === 'kort'
+            ? `<span class="card-back theme-art"><span class="card-back-title">${t.name}</span></span>`
+            : `<canvas class="theme-tile theme-art" style="--ratio:${t.width} / ${t.height}" aria-hidden="true"></canvas>`
+        }
+        <span class="theme-name">${t.name}</span></button>`,
+    )
+    .join('');
+  for (const c of host.querySelectorAll<HTMLCanvasElement>('canvas.theme-tile')) {
+    const id = (c.closest('[data-theme-pick]') as HTMLElement).dataset.themePick as ThemeId;
+    drawThemeTile(c, id, 0.5);
+  }
 }
 
 const booting = boot();
 
-document.querySelector('.theme-picks')!.addEventListener('click', async (e) => {
+$('theme-picks').addEventListener('click', async (e) => {
   const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-theme-pick]');
   const id = btn?.dataset.themePick;
   if (!isThemeId(id)) return;
