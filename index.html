@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="da">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#141a4d" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Fotoboksen" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <title>Fotoboksen</title>
+  </head>
+  <body data-screen="start">
+    <main>
+      <section id="start" class="screen" aria-label="Start">
+        <button id="start-btn" class="card-back start-card" type="button">
+          <span class="card-back-title">Fotoboksen</span>
+          <span class="card-back-sub">Tryk for at starte</span>
+        </button>
+        <p id="start-error" class="start-error" role="alert" hidden></p>
+      </section>
+
+      <section id="booth" class="screen" aria-label="Tag et kort">
+        <div class="picker picker-types">
+          <h2>Korttype</h2>
+          <div id="types" class="chips" role="group" aria-label="Korttype"></div>
+        </div>
+
+        <div class="stage">
+          <div class="live-card">
+            <canvas id="preview" aria-label="Kameraet som kort"></canvas>
+            <div class="sheen" aria-hidden="true"></div>
+            <div id="countdown" class="countdown" hidden aria-live="assertive">
+              <svg class="budget" viewBox="0 0 100 100" aria-hidden="true">
+                <circle cx="50" cy="50" r="44" />
+                <circle class="budget-fill" cx="50" cy="50" r="44" pathLength="100" />
+              </svg>
+              <span id="countdown-num" class="countdown-num">5</span>
+              <span class="countdown-hint">Smil!</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="picker picker-effects">
+          <h2>Effekt</h2>
+          <div id="effects" class="chips" role="group" aria-label="Effekt"></div>
+        </div>
+
+        <div class="shutter-row">
+          <button id="shutter" class="shutter" type="button"><span id="shutter-icon"></span>Tag kort!</button>
+        </div>
+        <button id="open-gallery" class="pill pill-quiet gallery-btn" type="button" aria-label="Samling"></button>
+      </section>
+
+      <section id="result" class="screen" aria-label="Dit kort">
+        <div class="result-stage">
+          <div id="result-card" class="tilt"></div>
+        </div>
+        <div class="result-side">
+          <h1 id="result-title">Nr. 001 er klar!</h1>
+          <p class="result-power">Superkraft: <span id="result-power"></span></p>
+          <div class="result-actions">
+            <button id="again" class="shutter shutter-small" type="button"></button>
+            <button id="result-print" class="pill" type="button"></button>
+            <button id="result-gallery" class="pill pill-quiet" type="button"></button>
+          </div>
+        </div>
+      </section>
+
+      <section id="gallery" class="screen" aria-label="Samlingen">
+        <header class="gallery-head">
+          <button id="gallery-back" class="pill pill-quiet" type="button"></button>
+          <h1>Samlingen <span id="gallery-count" class="gallery-count"></span></h1>
+          <button id="share-all" class="pill pill-quiet" type="button"></button>
+        </header>
+        <div id="binder" class="binder"></div>
+        <div id="gallery-empty" class="gallery-empty" hidden>
+          <p>Ingen kort endnu.</p>
+          <button id="gallery-first" class="shutter shutter-small" type="button">Tag det første!</button>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="viewer" class="viewer" aria-label="Kort">
+      <div id="viewer-card" class="tilt"></div>
+      <div class="viewer-actions">
+        <button id="viewer-print" class="pill" type="button"></button>
+        <button id="viewer-share" class="pill" type="button"></button>
+        <button id="viewer-delete" class="pill pill-danger" type="button"></button>
+        <button id="viewer-close" class="pill pill-quiet" type="button"></button>
+      </div>
+    </dialog>
+
+    <div id="flash" class="flash" aria-hidden="true"></div>
+    <div id="toast" class="toast" role="status" hidden></div>
+    <div id="print-sheet" class="print-sheet"></div>
+    <video id="video" class="video-source" playsinline muted autoplay></video>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

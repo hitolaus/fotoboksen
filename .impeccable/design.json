@@ -1,0 +1,564 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-10T13:06:14+00:00",
+  "title": "Design System: Fotoboksen",
+  "extensions": {
+    "colorMeta": {
+      "navy": {
+        "role": "neutral",
+        "displayName": "Binder Navy",
+        "canonical": "oklch(24.9% 0.093 273)",
+        "tonalRamp": [
+          "oklch(15% 0.046 273)",
+          "oklch(26% 0.059 273)",
+          "oklch(38% 0.073 273)",
+          "oklch(49% 0.087 273)",
+          "oklch(61% 0.087 273)",
+          "oklch(72% 0.073 273)",
+          "oklch(84% 0.059 273)",
+          "oklch(95% 0.046 273)"
+        ]
+      },
+      "navy-2": {
+        "role": "neutral",
+        "displayName": "Binder Navy Raised",
+        "canonical": "oklch(33.7% 0.129 272)",
+        "tonalRamp": [
+          "oklch(15% 0.063 272)",
+          "oklch(26% 0.082 272)",
+          "oklch(38% 0.101 272)",
+          "oklch(49% 0.119 272)",
+          "oklch(61% 0.119 272)",
+          "oklch(72% 0.101 272)",
+          "oklch(84% 0.082 272)",
+          "oklch(95% 0.063 272)"
+        ]
+      },
+      "navy-3": {
+        "role": "neutral",
+        "displayName": "Binder Navy Raised (light)",
+        "canonical": "oklch(39.7% 0.147 272)",
+        "tonalRamp": [
+          "oklch(15% 0.072 272)",
+          "oklch(26% 0.094 272)",
+          "oklch(38% 0.115 272)",
+          "oklch(49% 0.136 272)",
+          "oklch(61% 0.136 272)",
+          "oklch(72% 0.115 272)",
+          "oklch(84% 0.094 272)",
+          "oklch(95% 0.072 272)"
+        ]
+      },
+      "gold": {
+        "role": "primary",
+        "displayName": "Card-Stock Gold",
+        "canonical": "oklch(87.2% 0.173 91)",
+        "tonalRamp": [
+          "oklch(15% 0.085 91)",
+          "oklch(26% 0.110 91)",
+          "oklch(38% 0.135 91)",
+          "oklch(49% 0.160 91)",
+          "oklch(61% 0.160 91)",
+          "oklch(72% 0.135 91)",
+          "oklch(84% 0.110 91)",
+          "oklch(95% 0.085 91)"
+        ]
+      },
+      "gold-deep": {
+        "role": "primary",
+        "displayName": "Stock Shadow Gold",
+        "canonical": "oklch(76.3% 0.157 84)",
+        "tonalRamp": [
+          "oklch(15% 0.077 84)",
+          "oklch(26% 0.100 84)",
+          "oklch(38% 0.122 84)",
+          "oklch(49% 0.145 84)",
+          "oklch(61% 0.145 84)",
+          "oklch(72% 0.122 84)",
+          "oklch(84% 0.100 84)",
+          "oklch(95% 0.077 84)"
+        ]
+      },
+      "cream": {
+        "role": "neutral",
+        "displayName": "Plate Cream",
+        "canonical": "oklch(97.6% 0.031 91)",
+        "tonalRamp": [
+          "oklch(15% 0.015 91)",
+          "oklch(26% 0.020 91)",
+          "oklch(38% 0.024 91)",
+          "oklch(49% 0.029 91)",
+          "oklch(61% 0.029 91)",
+          "oklch(72% 0.024 91)",
+          "oklch(84% 0.020 91)",
+          "oklch(95% 0.015 91)"
+        ]
+      },
+      "magenta": {
+        "role": "secondary",
+        "displayName": "Shutter Magenta",
+        "canonical": "oklch(71.6% 0.251 338)",
+        "tonalRamp": [
+          "oklch(15% 0.123 338)",
+          "oklch(26% 0.160 338)",
+          "oklch(38% 0.197 338)",
+          "oklch(49% 0.233 338)",
+          "oklch(61% 0.233 338)",
+          "oklch(72% 0.197 338)",
+          "oklch(84% 0.160 338)",
+          "oklch(95% 0.123 338)"
+        ]
+      },
+      "cyan": {
+        "role": "tertiary",
+        "displayName": "Foil Cyan",
+        "canonical": "oklch(87.9% 0.132 204)",
+        "tonalRamp": [
+          "oklch(15% 0.065 204)",
+          "oklch(26% 0.084 204)",
+          "oklch(38% 0.103 204)",
+          "oklch(49% 0.122 204)",
+          "oklch(61% 0.122 204)",
+          "oklch(72% 0.103 204)",
+          "oklch(84% 0.084 204)",
+          "oklch(95% 0.065 204)"
+        ]
+      },
+      "lemon": {
+        "role": "tertiary",
+        "displayName": "Foil Lemon",
+        "canonical": "oklch(90.9% 0.163 97)",
+        "tonalRamp": [
+          "oklch(15% 0.080 97)",
+          "oklch(26% 0.104 97)",
+          "oklch(38% 0.127 97)",
+          "oklch(49% 0.151 97)",
+          "oklch(61% 0.151 97)",
+          "oklch(72% 0.127 97)",
+          "oklch(84% 0.104 97)",
+          "oklch(95% 0.080 97)"
+        ]
+      },
+      "danger": {
+        "role": "neutral",
+        "displayName": "Warning Coral",
+        "canonical": "oklch(70.9% 0.184 29)",
+        "tonalRamp": [
+          "oklch(15% 0.090 29)",
+          "oklch(26% 0.117 29)",
+          "oklch(38% 0.144 29)",
+          "oklch(49% 0.171 29)",
+          "oklch(61% 0.171 29)",
+          "oklch(72% 0.144 29)",
+          "oklch(84% 0.117 29)",
+          "oklch(95% 0.090 29)"
+        ]
+      },
+      "ild-light": {
+        "role": "tertiary",
+        "displayName": "Ild Light",
+        "canonical": "oklch(77.6% 0.159 59)",
+        "tonalRamp": [
+          "oklch(15% 0.078 59)",
+          "oklch(26% 0.101 59)",
+          "oklch(38% 0.124 59)",
+          "oklch(49% 0.147 59)",
+          "oklch(61% 0.147 59)",
+          "oklch(72% 0.124 59)",
+          "oklch(84% 0.101 59)",
+          "oklch(95% 0.078 59)"
+        ]
+      },
+      "ild-dark": {
+        "role": "tertiary",
+        "displayName": "Ild Dark",
+        "canonical": "oklch(61.0% 0.216 32)",
+        "tonalRamp": [
+          "oklch(15% 0.106 32)",
+          "oklch(26% 0.138 32)",
+          "oklch(38% 0.169 32)",
+          "oklch(49% 0.201 32)",
+          "oklch(61% 0.201 32)",
+          "oklch(72% 0.169 32)",
+          "oklch(84% 0.138 32)",
+          "oklch(95% 0.106 32)"
+        ]
+      },
+      "vand-light": {
+        "role": "tertiary",
+        "displayName": "Vand Light",
+        "canonical": "oklch(83.0% 0.112 227)",
+        "tonalRamp": [
+          "oklch(15% 0.055 227)",
+          "oklch(26% 0.071 227)",
+          "oklch(38% 0.087 227)",
+          "oklch(49% 0.104 227)",
+          "oklch(61% 0.104 227)",
+          "oklch(72% 0.087 227)",
+          "oklch(84% 0.071 227)",
+          "oklch(95% 0.055 227)"
+        ]
+      },
+      "vand-dark": {
+        "role": "tertiary",
+        "displayName": "Vand Dark",
+        "canonical": "oklch(56.2% 0.176 255)",
+        "tonalRamp": [
+          "oklch(15% 0.086 255)",
+          "oklch(26% 0.112 255)",
+          "oklch(38% 0.138 255)",
+          "oklch(49% 0.163 255)",
+          "oklch(61% 0.163 255)",
+          "oklch(72% 0.138 255)",
+          "oklch(84% 0.112 255)",
+          "oklch(95% 0.086 255)"
+        ]
+      },
+      "lyn-light": {
+        "role": "tertiary",
+        "displayName": "Lyn Light",
+        "canonical": "oklch(94.8% 0.142 103)",
+        "tonalRamp": [
+          "oklch(15% 0.070 103)",
+          "oklch(26% 0.090 103)",
+          "oklch(38% 0.111 103)",
+          "oklch(49% 0.131 103)",
+          "oklch(61% 0.131 103)",
+          "oklch(72% 0.111 103)",
+          "oklch(84% 0.090 103)",
+          "oklch(95% 0.070 103)"
+        ]
+      },
+      "lyn-dark": {
+        "role": "tertiary",
+        "displayName": "Lyn Dark",
+        "canonical": "oklch(77.7% 0.165 73)",
+        "tonalRamp": [
+          "oklch(15% 0.081 73)",
+          "oklch(26% 0.105 73)",
+          "oklch(38% 0.129 73)",
+          "oklch(49% 0.153 73)",
+          "oklch(61% 0.153 73)",
+          "oklch(72% 0.129 73)",
+          "oklch(84% 0.105 73)",
+          "oklch(95% 0.081 73)"
+        ]
+      },
+      "jungle-light": {
+        "role": "tertiary",
+        "displayName": "Jungle Light",
+        "canonical": "oklch(86.7% 0.193 138)",
+        "tonalRamp": [
+          "oklch(15% 0.095 138)",
+          "oklch(26% 0.123 138)",
+          "oklch(38% 0.151 138)",
+          "oklch(49% 0.179 138)",
+          "oklch(61% 0.179 138)",
+          "oklch(72% 0.151 138)",
+          "oklch(84% 0.123 138)",
+          "oklch(95% 0.095 138)"
+        ]
+      },
+      "jungle-dark": {
+        "role": "tertiary",
+        "displayName": "Jungle Dark",
+        "canonical": "oklch(60.2% 0.157 151)",
+        "tonalRamp": [
+          "oklch(15% 0.077 151)",
+          "oklch(26% 0.100 151)",
+          "oklch(38% 0.123 151)",
+          "oklch(49% 0.146 151)",
+          "oklch(61% 0.146 151)",
+          "oklch(72% 0.123 151)",
+          "oklch(84% 0.100 151)",
+          "oklch(95% 0.077 151)"
+        ]
+      },
+      "galakse-light": {
+        "role": "tertiary",
+        "displayName": "Galakse Light",
+        "canonical": "oklch(71.3% 0.166 294)",
+        "tonalRamp": [
+          "oklch(15% 0.081 294)",
+          "oklch(26% 0.106 294)",
+          "oklch(38% 0.130 294)",
+          "oklch(49% 0.154 294)",
+          "oklch(61% 0.154 294)",
+          "oklch(72% 0.130 294)",
+          "oklch(84% 0.106 294)",
+          "oklch(95% 0.081 294)"
+        ]
+      },
+      "galakse-dark": {
+        "role": "tertiary",
+        "displayName": "Galakse Dark",
+        "canonical": "oklch(37.3% 0.188 282)",
+        "tonalRamp": [
+          "oklch(15% 0.092 282)",
+          "oklch(26% 0.120 282)",
+          "oklch(38% 0.147 282)",
+          "oklch(49% 0.174 282)",
+          "oklch(61% 0.174 282)",
+          "oklch(72% 0.147 282)",
+          "oklch(84% 0.120 282)",
+          "oklch(95% 0.092 282)"
+        ]
+      },
+      "slik-light": {
+        "role": "tertiary",
+        "displayName": "Slik Light",
+        "canonical": "oklch(83.1% 0.118 345)",
+        "tonalRamp": [
+          "oklch(15% 0.058 345)",
+          "oklch(26% 0.075 345)",
+          "oklch(38% 0.093 345)",
+          "oklch(49% 0.110 345)",
+          "oklch(61% 0.110 345)",
+          "oklch(72% 0.093 345)",
+          "oklch(84% 0.075 345)",
+          "oklch(95% 0.058 345)"
+        ]
+      },
+      "slik-dark": {
+        "role": "tertiary",
+        "displayName": "Slik Dark",
+        "canonical": "oklch(61.1% 0.231 360)",
+        "tonalRamp": [
+          "oklch(15% 0.113 360)",
+          "oklch(26% 0.147 360)",
+          "oklch(38% 0.180 360)",
+          "oklch(49% 0.214 360)",
+          "oklch(61% 0.214 360)",
+          "oklch(72% 0.180 360)",
+          "oklch(84% 0.147 360)",
+          "oklch(95% 0.113 360)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Countdown numeral only, stroked in navy over the photo."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Result and gallery titles, shutter label, card-back title."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Picker headings Korttype and Effekt, in gold."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default running text, errors and toasts."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Pill and chip labels; tabular numerals for counts."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-lift",
+        "value": "0 24px 60px rgb(0 0 0 / 0.5)",
+        "purpose": "Live card and finished card face; card back at 0.45."
+      },
+      {
+        "name": "pocket",
+        "value": "0 10px 24px rgb(0 0 0 / 0.4)",
+        "purpose": "Cards in the gallery grid."
+      },
+      {
+        "name": "chip-chosen",
+        "value": "0 6px 18px rgb(0 0 0 / 0.3)",
+        "purpose": "Selected chip."
+      },
+      {
+        "name": "shutter",
+        "value": "0 0 0 6px var(--cream), 0 16px 36px 4px rgb(0 0 0 / 0.42)",
+        "purpose": "Capture pill at rest: cream ring plus deep drop."
+      },
+      {
+        "name": "shutter-pressed",
+        "value": "0 0 0 6px var(--cream), 0 6px 16px 2px rgb(0 0 0 / 0.4)",
+        "purpose": "Capture pill while pressed."
+      },
+      {
+        "name": "toast",
+        "value": "0 10px 30px rgb(0 0 0 / 0.4)",
+        "purpose": "Status toast."
+      }
+    ],
+    "motion": [
+      {
+        "name": "press",
+        "value": "transform 0.12s-0.15s, scale(0.95-0.98)",
+        "purpose": "Every button, chip and pocket presses in on :active."
+      },
+      {
+        "name": "pick-spring",
+        "value": "0.45s cubic-bezier(0.3, 1.6, 0.5, 1)",
+        "purpose": "Chip selection pop, scale 0.9 to 1."
+      },
+      {
+        "name": "reveal-flip",
+        "value": "1.25s cubic-bezier(0.25, 1.25, 0.4, 1)",
+        "purpose": "Card flips in from its back after capture."
+      },
+      {
+        "name": "tilt-settle",
+        "value": "0.5s cubic-bezier(0.2, 0.9, 0.3, 1)",
+        "purpose": "Card tilt returning to rest; 0.08s linear while touching. Also the result panel rise-in (0.6s, 0.8s delay)."
+      },
+      {
+        "name": "sheen-sweep",
+        "value": "4.5s cubic-bezier(0.45, 0, 0.3, 1) infinite",
+        "purpose": "Specular band across the live card."
+      },
+      {
+        "name": "foil-drift",
+        "value": "9s linear infinite",
+        "purpose": "Foil drift on the card back."
+      },
+      {
+        "name": "countdown-tick",
+        "value": "0.6s cubic-bezier(0.2, 1.5, 0.4, 1)",
+        "purpose": "Countdown numeral pop each second."
+      },
+      {
+        "name": "flash",
+        "value": "0.7s ease-out",
+        "purpose": "White capture flash."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "portrait",
+        "value": "(orientation: portrait)"
+      },
+      {
+        "name": "reduced-motion",
+        "value": "(prefers-reduced-motion: reduce)"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Shutter",
+      "kind": "button",
+      "refersTo": "button-shutter",
+      "description": "The one capture action: magenta pill with cream ring, the largest control on screen.",
+      "html": "<button class=\"ds-shutter\" type=\"button\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 8.5A2.5 2.5 0 0 1 6.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-8Z M12 15.5a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z\"/></svg>Tag kort!</button>",
+      "css": ".ds-shutter { display: inline-flex; align-items: center; justify-content: center; gap: 14px; min-width: 340px; height: 108px; padding: 0 44px; border: 0; border-radius: 999px; background: var(--magenta, #ff4fd8); color: var(--navy, #141a4d); font-family: 'Lilita One', sans-serif; font-size: 48px; cursor: pointer; box-shadow: 0 0 0 6px var(--cream, #fff7e0), 0 16px 36px 4px rgb(0 0 0 / 0.42); transition: transform 0.12s, box-shadow 0.12s; } .ds-shutter svg { width: 1em; height: 1em; } .ds-shutter:active { transform: translateY(3px) scale(0.98); box-shadow: 0 0 0 6px var(--cream, #fff7e0), 0 6px 16px 2px rgb(0 0 0 / 0.4); } .ds-shutter:focus-visible { outline: 4px solid var(--cyan, #4ef0ff); outline-offset: 4px; }"
+    },
+    {
+      "name": "Pill",
+      "kind": "button",
+      "refersTo": "button-pill",
+      "description": "Primary non-capture action (Print, Del): gold with navy label and icon.",
+      "html": "<button class=\"ds-pill\" type=\"button\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 9V3.5h10V9 M7 17H5a1.5 1.5 0 0 1-1.5-1.5v-5A1.5 1.5 0 0 1 5 9h14a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 19 17h-2 M7 14h10v6.5H7V14Z\"/></svg><span>Print</span></button>",
+      "css": ".ds-pill { display: inline-flex; align-items: center; justify-content: center; gap: 12px; height: 72px; padding: 0 28px; border: 0; border-radius: 999px; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 24px; cursor: pointer; transition: transform 0.12s, background-color 0.2s; background: var(--gold, #ffcf1f); color: var(--navy, #141a4d); } .ds-pill svg { width: 1.15em; height: 1.15em; } .ds-pill:active { transform: scale(0.96); } .ds-pill:focus-visible { outline: 4px solid var(--cyan, #4ef0ff); outline-offset: 4px; } .ds-pill:disabled { opacity: 0.4; cursor: default; }"
+    },
+    {
+      "name": "Quiet Pill with Count",
+      "kind": "button",
+      "refersTo": "button-pill-quiet",
+      "description": "Navigation and secondary actions; the booth's Samling button carries a gold count badge.",
+      "html": "<button class=\"ds-pill-quiet\" type=\"button\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 3.5h9.5a2 2 0 0 1 2 2V18 M4.5 7.5a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2H6.5a2 2 0 0 1-2-2V7.5Z\"/></svg><span>Samling</span><span class=\"ds-count\">12</span></button>",
+      "css": ".ds-pill-quiet { display: inline-flex; align-items: center; justify-content: center; gap: 12px; height: 72px; padding: 0 28px; border: 0; border-radius: 999px; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 24px; cursor: pointer; transition: transform 0.12s, background-color 0.2s; background: rgb(255 255 255 / 0.1); color: var(--cream, #fff7e0); } .ds-pill-quiet svg { width: 1.15em; height: 1.15em; } .ds-pill-quiet:active { transform: scale(0.96); } .ds-pill-quiet:focus-visible { outline: 4px solid var(--cyan, #4ef0ff); outline-offset: 4px; } .ds-count { min-width: 40px; height: 40px; padding: 0 10px; border-radius: 20px; background: var(--gold, #ffcf1f); color: var(--navy, #141a4d); display: grid; place-items: center; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Danger Pill",
+      "kind": "button",
+      "refersTo": "button-pill-danger",
+      "description": "Two-tap delete: coral tint at rest, solid coral once armed.",
+      "html": "<button class=\"ds-pill-danger\" type=\"button\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4.5 6.5h15 M9.5 6.5V4h5v2.5 M6.5 6.5l1 13.5h9l1-13.5 M10 10v6.5 M14 10v6.5\"/></svg><span>Slet</span></button> <button class=\"ds-pill-danger armed\" type=\"button\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4.5 6.5h15 M9.5 6.5V4h5v2.5 M6.5 6.5l1 13.5h9l1-13.5 M10 10v6.5 M14 10v6.5\"/></svg><span>Tryk igen for at slette</span></button>",
+      "css": ".ds-pill-danger { display: inline-flex; align-items: center; justify-content: center; gap: 12px; height: 72px; padding: 0 28px; border: 0; border-radius: 999px; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 24px; cursor: pointer; transition: transform 0.12s, background-color 0.2s; background: rgb(255 107 90 / 0.16); color: #ffb3aa; } .ds-pill-danger svg { width: 1.15em; height: 1.15em; } .ds-pill-danger.armed { background: var(--danger, #ff6b5a); color: var(--navy, #141a4d); } .ds-pill-danger:active { transform: scale(0.96); } .ds-pill-danger:focus-visible { outline: 4px solid var(--cyan, #4ef0ff); outline-offset: 4px; }"
+    },
+    {
+      "name": "Type Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Card-type picker: pill with a type-gradient disc and filled element glyph; gold when chosen.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\" type=\"button\" aria-pressed=\"true\"><span class=\"ds-chip-disc\" style=\"--c1:#ff9a3c;--c2:#e8371a;color:#fff7e0\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"currentColor\"><path d=\"M12.2 2c.9 3.3 5.3 5.6 5.3 11.1A5.6 5.6 0 0 1 12 18.8a5.6 5.6 0 0 1-5.5-5.7c0-2.6 1.3-4.2 2.6-5.4.2 1.8 1 2.9 2 3.4-.4-3.3.1-6.4 1.1-9.1Z M12 22a3 3 0 0 1-3-3c0-1.6 1.3-2.7 3-4.6 1.7 1.9 3 3 3 4.6a3 3 0 0 1-3 3Z\"/></svg></span>Ild</button><button class=\"ds-chip\" type=\"button\" aria-pressed=\"false\"><span class=\"ds-chip-disc\" style=\"--c1:#fff27a;--c2:#f5a300;color:#141a4d\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"currentColor\"><path d=\"M13.8 1.8 4.6 13.6h5.9l-1.3 8.6 10.2-12.6h-6l.4-7.8Z\"/></svg></span>Lyn</button></div>",
+      "css": ".ds-chips { display: grid; gap: 12px; max-width: 420px; padding: 16px; background: var(--navy, #141a4d); } .ds-chip { height: 84px; display: flex; align-items: center; gap: 14px; padding: 0 18px 0 12px; border: 0; border-radius: 42px; background: rgb(255 255 255 / 0.08); color: var(--cream, #fff7e0); font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 24px; text-align: left; cursor: pointer; transition: background-color 0.2s, color 0.2s, transform 0.15s; } .ds-chip:active { transform: scale(0.96); } .ds-chip:focus-visible { outline: 4px solid var(--cyan, #4ef0ff); outline-offset: 4px; } .ds-chip[aria-pressed='true'] { background: var(--gold, #ffcf1f); color: var(--navy, #141a4d); box-shadow: 0 6px 18px rgb(0 0 0 / 0.3); animation: ds-pick 0.45s cubic-bezier(0.3, 1.6, 0.5, 1); } .ds-chip-disc { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; flex: none; background: linear-gradient(160deg, var(--c1), var(--c2)); } .ds-chip-disc svg { width: 30px; height: 30px; } @keyframes ds-pick { 0% { transform: scale(0.9); } 100% { transform: scale(1); } }"
+    },
+    {
+      "name": "Effect Chip",
+      "kind": "chip",
+      "refersTo": "chip-selected",
+      "description": "Effect picker: translucent disc with a stroked icon; chosen state is gold with a navy disc and gold icon.",
+      "html": "<div class=\"ds-chips-fx\"><button class=\"ds-chip-fx\" type=\"button\" aria-pressed=\"true\"><span class=\"ds-fx-disc\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3c.6 4.4 2.6 6.4 7 7-4.4.6-6.4 2.6-7 7-.6-4.4-2.6-6.4-7-7 4.4-.6 6.4-2.6 7-7Z M18.5 16c.3 1.7 1 2.4 2.5 2.5-1.5.3-2.2 1-2.5 2.5-.3-1.5-1-2.2-2.5-2.5 1.5-.1 2.2-.8 2.5-2.5Z\"/></svg></span>Holo</button></div>",
+      "css": ".ds-chips-fx { padding: 16px; background: var(--navy, #141a4d); max-width: 420px; } .ds-chip-fx { width: 100%; height: 84px; display: flex; align-items: center; gap: 14px; padding: 0 18px 0 12px; border: 0; border-radius: 42px; background: rgb(255 255 255 / 0.08); color: var(--cream, #fff7e0); font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 24px; cursor: pointer; transition: background-color 0.2s, color 0.2s, transform 0.15s; } .ds-chip-fx:active { transform: scale(0.96); } .ds-chip-fx:focus-visible { outline: 4px solid var(--cyan, #4ef0ff); outline-offset: 4px; } .ds-chip-fx[aria-pressed='true'] { background: var(--gold, #ffcf1f); color: var(--navy, #141a4d); box-shadow: 0 6px 18px rgb(0 0 0 / 0.3); } .ds-fx-disc { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: rgb(255 255 255 / 0.1); } .ds-chip-fx[aria-pressed='true'] .ds-fx-disc { background: var(--navy, #141a4d); color: var(--gold, #ffcf1f); } .ds-fx-disc svg { width: 30px; height: 30px; }"
+    },
+    {
+      "name": "Card Back",
+      "kind": "card",
+      "refersTo": "",
+      "description": "The start card and flip back: navy pinwheel, double gold border, tilted gold title, drifting foil.",
+      "html": "<button class=\"ds-card-back\" type=\"button\"><span class=\"ds-cb-title\">Fotoboksen</span><span class=\"ds-cb-sub\">Tryk for at starte</span></button>",
+      "css": ".ds-card-back { position: relative; height: 420px; aspect-ratio: 5 / 7; border: 0; border-radius: 5.2% / 3.7%; color: var(--cream, #fff7e0); font-family: 'Baloo 2', sans-serif; cursor: pointer; background: radial-gradient(circle at 50% 50%, transparent 0 34%, rgb(255 207 31 / 0.14) 34.4% 35%, transparent 35.4%), repeating-conic-gradient(from 0deg at 50% 50%, var(--navy-3, #2f3a94) 0 10deg, var(--navy-2, #232c78) 10deg 20deg); box-shadow: inset 0 0 0 14px var(--gold, #ffcf1f), inset 0 0 0 18px var(--gold-deep, #e0a800), 0 24px 60px rgb(0 0 0 / 0.45); display: grid; place-content: center; text-align: center; gap: 0.6em; overflow: hidden; transition: transform 0.15s; } .ds-card-back::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, #4ef0ff 0%, #ff4fd8 30%, #ffe14d 55%, #4ef0ff 80%, #ff4fd8 100%); background-size: 300% 300%; mix-blend-mode: color-dodge; opacity: 0.22; animation: ds-drift 9s linear infinite; pointer-events: none; } .ds-card-back:active { transform: scale(0.97); } .ds-card-back:focus-visible { outline: 4px solid var(--cyan, #4ef0ff); outline-offset: 4px; } .ds-cb-title { font-family: 'Lilita One', sans-serif; font-size: 48px; color: var(--gold, #ffcf1f); text-shadow: 0 4px 16px rgb(0 0 0 / 0.45); transform: rotate(-6deg); } .ds-cb-sub { font-weight: 800; font-size: 20px; } @keyframes ds-drift { to { background-position: 300% 300%; } }"
+    },
+    {
+      "name": "Toast",
+      "kind": "custom",
+      "refersTo": "toast",
+      "description": "Brief status message: cream plate with navy Baloo 800 text, bottom-centre.",
+      "html": "<div class=\"ds-toast\" role=\"status\">Kortet er gemt</div>",
+      "css": ".ds-toast { display: inline-block; background: var(--cream, #fff7e0); color: var(--navy, #141a4d); font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; padding: 14px 24px; border-radius: 18px; box-shadow: 0 10px 30px rgb(0 0 0 / 0.4); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Collector's Binder",
+    "overview": "Every photo is minted as a holo trading card, and the whole app is the binder the card lives in. The ground is deep binder navy; the objects on it are gold card stock, holo foil and cream plates. The live camera is not a viewfinder but the art window of an upright 5:7 card, and the card is always the largest thing on screen.\n\nDensity is low and controls are huge: two columns of six fat chips flank the card, one magenta pill under it is the largest control, and every label is a short Danish word backed by an icon. Everything on the card itself (gold stock, type-coloured panel, cream mat, navy ribbon, cream stats plate) is drawn on canvas on a fixed 1000 x 1400 grid, so the live preview, the saved JPEG and the print are the same object.\n\nMotion belongs to the card: a foil sweep on the live card, a 3D flip reveal after capture, tilt and a finger-tracked foil highlight on the finished card. Chrome only answers touches with a press-scale and a springy pick.",
+    "keyCharacteristics": [
+      "Navy ground, gold and cream objects, magenta reserved for the one capture action.",
+      "One upright 5:7 card as the hero on every screen except the gallery grid.",
+      "Six card types, each a saturated light/dark pair plus a filled element glyph.",
+      "Lilita One for everything a kid reads at a distance; Baloo 2 heavy for labels.",
+      "Pills and discs everywhere in the chrome; card-proportioned rounded rectangles for cards."
+    ],
+    "rules": [
+      {
+        "name": "The One Magenta Rule",
+        "body": "Solid magenta fills only the capture pill. Everything else that is chosen or primary is gold.",
+        "section": "colors"
+      },
+      {
+        "name": "The Lyn Exception Rule",
+        "body": "Lyn is the only light type: its ink, glyph and footer flip to navy, and its chip disc icon is navy. Any new type with a light -dark tone must declare navy ink the same way.",
+        "section": "colors"
+      },
+      {
+        "name": "The Card-Furniture Caps Rule",
+        "body": "Uppercase Baloo 800 appears only inside the drawn card (ribbon, stat label, set mark), as trading-card printing. App chrome is sentence case.",
+        "section": "typography"
+      },
+      {
+        "name": "The Stroke-Under Rule",
+        "body": "Display text laid over the live photo (countdown numeral, \"Smil!\") carries a navy -webkit-text-stroke with paint-order: stroke fill, so it reads over any face.",
+        "section": "typography"
+      },
+      {
+        "name": "The Objects-Lift Rule",
+        "body": "Only cards, the shutter, the chosen chip and the toast cast shadows. Quiet pills, unselected chips and headings sit flat on the navy.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** keep the card the largest object on any screen, at 5:7, with the 0 24px 60px card-lift shadow.",
+      "**Do** draw anything that belongs to the card on the 1000 x 1400 canvas grid so preview, JPEG and print match.",
+      "**Do** mark the chosen option in gold with navy text; keep solid magenta for the capture pill only.",
+      "**Do** pair every control word with an icon from the two authored sets: filled element glyphs or stroked UI icons at 2.2.",
+      "**Do** put new controls in pills or chips of at least 72px height, with press-scale feedback.",
+      "**Do** stroke display text in navy whenever it sits on the live photo."
+    ],
+    "donts": [
+      "**Don't** use uppercase labels or small tracked captions in app chrome; caps belong only to card furniture.",
+      "**Don't** add hard offset shadows or coloured glows; depth is soft black lift and the foil layer.",
+      "**Don't** introduce square or slightly rounded rectangles in chrome; chrome is pills and discs.",
+      "**Don't** animate chrome beyond press-scale, the chip pick, the countdown and the result panel's rise-in (0.6s after the flip); ambient motion belongs to the card's foil.",
+      "**Don't** set a type's ink to cream when its -dark tone is light (see The Lyn Exception Rule)."
+    ]
+  }
+}

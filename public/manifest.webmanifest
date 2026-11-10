@@ -1,0 +1,14 @@
+{
+  "name": "Fotoboksen",
+  "short_name": "Fotoboksen",
+  "lang": "da",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#141a4d",
+  "theme_color": "#141a4d",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

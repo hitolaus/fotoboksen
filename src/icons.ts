@@ -1,0 +1,42 @@
+/** Filled element glyphs on a 24x24 grid. Used both as SVG in the UI and as Path2D on the card canvas. */
+export const ELEMENT_PATHS = {
+  flame:
+    'M12.2 2c.9 3.3 5.3 5.6 5.3 11.1A5.6 5.6 0 0 1 12 18.8a5.6 5.6 0 0 1-5.5-5.7c0-2.6 1.3-4.2 2.6-5.4.2 1.8 1 2.9 2 3.4-.4-3.3.1-6.4 1.1-9.1Z M12 22a3 3 0 0 1-3-3c0-1.6 1.3-2.7 3-4.6 1.7 1.9 3 3 3 4.6a3 3 0 0 1-3 3Z',
+  drop: 'M12 2.5C8.8 7.2 5.8 10.4 5.8 14.4a6.2 6.2 0 0 0 12.4 0c0-4-3-7.2-6.2-11.9Z',
+  bolt: 'M13.8 1.8 4.6 13.6h5.9l-1.3 8.6 10.2-12.6h-6l.4-7.8Z',
+  leaf: 'M20.5 3.5C10.6 3.4 4.3 8.6 4.3 15.4c0 1.3.3 2.5.8 3.6L3 21.1l1.2 1.2 2-2c1.1.6 2.4.9 3.8.9 6.7 0 10.8-6.8 10.5-17.7Z',
+  star: 'm12 2.2 3 6.2 6.8.9-5 4.7 1.3 6.8L12 17.5l-6.1 3.3 1.3-6.8-5-4.7 6.8-.9 3-6.2Z',
+  heart: 'M12 21.3S3.3 15.9 3.3 9.6A4.8 4.8 0 0 1 12 6.8a4.8 4.8 0 0 1 8.7 2.8c0 6.3-8.7 11.7-8.7 11.7Z',
+} as const;
+
+export type ElementIcon = keyof typeof ELEMENT_PATHS;
+
+/** Stroked UI icons on a 24x24 grid, drawn at one weight. */
+const UI_PATHS = {
+  camera:
+    'M4 8.5A2.5 2.5 0 0 1 6.5 6h1.8l1.4-2h4.6l1.4 2h1.8A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-8Z M12 15.5a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z',
+  cards: 'M8 3.5h9.5a2 2 0 0 1 2 2V18 M4.5 7.5a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2H6.5a2 2 0 0 1-2-2V7.5Z',
+  back: 'M14.5 5 7.5 12l7 7',
+  print: 'M7 9V3.5h10V9 M7 17H5a1.5 1.5 0 0 1-1.5-1.5v-5A1.5 1.5 0 0 1 5 9h14a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 19 17h-2 M7 14h10v6.5H7V14Z',
+  share: 'M12 3v12 M7.5 7.5 12 3l4.5 4.5 M5 12v6.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V12',
+  trash: 'M4.5 6.5h15 M9.5 6.5V4h5v2.5 M6.5 6.5l1 13.5h9l1-13.5 M10 10v6.5 M14 10v6.5',
+  again: 'M19.5 12a7.5 7.5 0 1 1-2.2-5.3 M19.5 4v4.5H15',
+  close: 'M6 6l12 12 M18 6 6 18',
+  // effect glyphs
+  normal: 'M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z M9 10v.5 M15 10v.5 M8.5 14a4 4 0 0 0 7 0',
+  holo: 'M12 3c.6 4.4 2.6 6.4 7 7-4.4.6-6.4 2.6-7 7-.6-4.4-2.6-6.4-7-7 4.4-.6 6.4-2.6 7-7Z M18.5 16c.3 1.7 1 2.4 2.5 2.5-1.5.3-2.2 1-2.5 2.5-.3-1.5-1-2.2-2.5-2.5 1.5-.1 2.2-.8 2.5-2.5Z',
+  pixel: 'M4 4h5v5H4z M9.5 9.5h5v5h-5z M15 4h5v5h-5z M4 15h5v5H4z M15 15h5v5h-5z',
+  tegneserie: 'M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v8a1.5 1.5 0 0 1-1.5 1.5H11l-4.5 4v-4h-1A1.5 1.5 0 0 1 4 13.5v-8Z M8 9.5h8',
+  pop: 'M9 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z M15 19a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z',
+  spejl: 'M12 3v18 M9 6.5 4 12l5 5.5 M15 6.5l5 5.5-5 5.5',
+} as const;
+
+export type UiIcon = keyof typeof UI_PATHS;
+
+export function uiIcon(name: UiIcon): string {
+  return `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${UI_PATHS[name]}"/></svg>`;
+}
+
+export function elementIcon(name: ElementIcon): string {
+  return `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="${ELEMENT_PATHS[name]}"/></svg>`;
+}
