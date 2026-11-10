@@ -12,6 +12,7 @@ import { PAINTERS, drawThemeTile, loadFonts, renderFinal, type RenderInfo } from
 import { startCountdown } from './countdown';
 import { cardNumberLabel } from './powers';
 import { CardStore, type CardRecord } from './store';
+import { PRINT_SIZES, gridFor, printSize, printSummary, type PrintSizeId } from './print';
 import { uiIcon } from './icons';
 import { COUNTDOWN_SECONDS, RESULT_IDLE_SECONDS } from './config';
 import { THEMES, themeOf, isThemeId, visibleThemes, type Theme, type ThemeId } from './themes';
@@ -20,7 +21,8 @@ import {
   CameraError,
   cardFile,
   keepAwake,
-  printImage,
+  printPictures,
+  type PrintItem,
   shareFiles,
   shutterSound,
   startCamera,
@@ -53,6 +55,7 @@ let store: CardStore | undefined;
 let resultIdle: ReturnType<typeof setTimeout> | undefined;
 
 function show(screen: Screen) {
+  if (screen !== 'gallery' && selecting) setSelecting(false);
   state.screen = screen;
   document.body.dataset.screen = screen;
   clearTimeout(resultIdle);
@@ -291,8 +294,10 @@ function attachTilt(host: HTMLElement) {
 /* ---------- result ---------- */
 
 let resultUrl: string | undefined;
+let resultRecord: CardRecord | undefined;
 
 function showResult(record: CardRecord) {
+  resultRecord = record;
   if (resultUrl) URL.revokeObjectURL(resultUrl);
   resultUrl = URL.createObjectURL(record.image);
   const theme = THEMES[themeOf(record)];
@@ -313,7 +318,7 @@ function armResultIdle() {
 $('result').addEventListener('pointerdown', armResultIdle);
 $('again').addEventListener('click', () => show('booth'));
 $('result-gallery').addEventListener('click', () => show('gallery'));
-$('result-print').addEventListener('click', () => resultUrl && void printImage(resultUrl));
+$('result-print').addEventListener('click', () => resultRecord && resultUrl && askPrint([printItem(resultRecord, resultUrl)]));
 
 /* ---------- gallery ---------- */
 
@@ -328,9 +333,11 @@ async function renderGallery() {
   galleryUrls.forEach((u) => URL.revokeObjectURL(u));
   galleryRecords = store ? await store.list() : [];
   galleryUrls = galleryRecords.map((r) => URL.createObjectURL(r.image));
-  $('gallery-count').textContent = `${galleryRecords.length} ${galleryRecords.length === 1 ? 'billede' : 'billeder'}`;
+  if (selecting) setSelecting(false);
+  updateSelectionUi();
   $('gallery-empty').hidden = galleryRecords.length > 0;
   $<HTMLButtonElement>('share-all').disabled = galleryRecords.length === 0;
+  $<HTMLButtonElement>('select-start').disabled = galleryRecords.length === 0;
   $('binder').innerHTML = galleryRecords
     .map((r, i) => {
       const t = THEMES[themeOf(r)];
@@ -342,8 +349,91 @@ async function renderGallery() {
 
 $('binder').addEventListener('click', (e) => {
   const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-index]');
-  if (btn) openViewer(Number(btn.dataset.index));
+  if (!btn) return;
+  const i = Number(btn.dataset.index);
+  if (selecting) toggleSelected(i, btn);
+  else openViewer(i);
 });
+
+/* ---------- choosing pictures to print together ---------- */
+
+let selecting = false;
+const selected = new Set<number>();
+
+function setSelecting(on: boolean) {
+  selecting = on;
+  selected.clear();
+  $('gallery').dataset.selecting = String(on);
+  for (const b of $('binder').querySelectorAll<HTMLElement>('.pocket')) {
+    if (on) b.setAttribute('aria-pressed', 'false');
+    else b.removeAttribute('aria-pressed');
+  }
+  updateSelectionUi();
+}
+
+function toggleSelected(i: number, btn: HTMLElement) {
+  if (selected.has(i)) selected.delete(i);
+  else selected.add(i);
+  btn.setAttribute('aria-pressed', String(selected.has(i)));
+  updateSelectionUi();
+}
+
+function updateSelectionUi() {
+  const n = selected.size;
+  $('gallery-count').textContent = selecting
+    ? `${n} valgt`
+    : `${galleryRecords.length} ${galleryRecords.length === 1 ? 'billede' : 'billeder'}`;
+  $<HTMLButtonElement>('print-selected').disabled = n === 0;
+  $('print-selected').innerHTML = `${uiIcon('print')}<span>Print${n ? ` (${n})` : ''}</span>`;
+}
+
+$('select-start').addEventListener('click', () => setSelecting(true));
+$('select-cancel').addEventListener('click', () => setSelecting(false));
+$('print-selected').addEventListener('click', () => {
+  // in gallery order, newest first, the same order the adult sees
+  const items = [...selected].sort((a, b) => a - b).map((i) => printItem(galleryRecords[i], galleryUrls[i]));
+  if (items.length) askPrint(items);
+});
+
+/* ---------- print size ---------- */
+
+const printDialog = $<HTMLDialogElement>('print-dialog');
+let pendingPrint: PrintItem[] = [];
+
+function printItem(r: CardRecord, url: string): PrintItem {
+  const t = THEMES[themeOf(r)];
+  return { url, ratio: t.width / t.height };
+}
+
+/** A tiny A4 page showing how the pictures sit on the sheet at that size. */
+function sheetPreview(id: PrintSizeId): string {
+  const { cols, rows } = gridFor(printSize(id));
+  const cells = Array.from({ length: cols * rows }, () => '<i></i>').join('');
+  return `<span class="mini-sheet" style="--cols:${cols};--rows:${rows}" aria-hidden="true">${cells}</span>`;
+}
+
+function askPrint(items: PrintItem[]) {
+  pendingPrint = items;
+  $('print-count').textContent = items.length === 1 ? '1 billede' : `${items.length} billeder`;
+  $('print-sizes').innerHTML = PRINT_SIZES.map(
+    (s) => `<button class="print-size" type="button" data-size="${s.id}">
+      ${sheetPreview(s.id)}
+      <span class="print-size-label">${s.label}</span>
+      <span class="print-size-hint">${s.hint}</span>
+      <span class="print-size-sum">${printSummary(items.length, s)}</span>
+    </button>`,
+  ).join('');
+  printDialog.showModal();
+}
+
+$('print-sizes').addEventListener('click', (e) => {
+  const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-size]');
+  if (!btn) return;
+  printDialog.close();
+  void printPictures(pendingPrint, printSize(btn.dataset.size as PrintSizeId));
+});
+$('print-cancel').addEventListener('click', () => printDialog.close());
+printDialog.addEventListener('click', (e) => e.target === printDialog && printDialog.close());
 
 $('gallery-back').addEventListener('click', () => show('booth'));
 $('gallery-first').addEventListener('click', () => show('booth'));
@@ -400,7 +490,7 @@ deleteBtn.addEventListener('click', async () => {
 
 $('viewer-close').addEventListener('click', () => viewer.close());
 viewer.addEventListener('click', (e) => e.target === viewer && viewer.close());
-$('viewer-print').addEventListener('click', () => void printImage(galleryUrls[viewerIndex]));
+$('viewer-print').addEventListener('click', () => askPrint([printItem(galleryRecords[viewerIndex], galleryUrls[viewerIndex])]));
 $('viewer-share').addEventListener('click', () => {
   const r = galleryRecords[viewerIndex];
   shareFiles([cardFile(r.image, r.number)]).catch(() => toast('Billedet kunne ikke deles.'));
@@ -417,6 +507,8 @@ async function boot() {
   $('change-theme').innerHTML = `${uiIcon('palette')}<span>Skift tema</span>`;
   $('booth-back').innerHTML = `${uiIcon('back')}<span>Skift tema</span>`;
   $('share-all').innerHTML = `${uiIcon('share')}<span>Del alle</span>`;
+  $('select-start').innerHTML = `${uiIcon('select')}<span>Vælg</span>`;
+  $('select-cancel').innerHTML = `${uiIcon('close')}<span>Annuller</span>`;
   $('viewer-print').innerHTML = `${uiIcon('print')}<span>Print</span>`;
   $('viewer-share').innerHTML = `${uiIcon('share')}<span>Del</span>`;
   $('viewer-close').innerHTML = `${uiIcon('close')}<span>Luk</span>`;

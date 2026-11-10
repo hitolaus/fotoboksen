@@ -75,8 +75,13 @@
           <button id="gallery-back" class="pill pill-quiet" type="button"></button>
           <h1>Samlingen <span id="gallery-count" class="gallery-count"></span></h1>
           <div class="gallery-tools">
+            <button id="select-start" class="pill pill-quiet" type="button"></button>
             <button id="change-theme" class="pill pill-quiet" type="button"></button>
             <button id="share-all" class="pill pill-quiet" type="button"></button>
+          </div>
+          <div class="gallery-tools gallery-tools-select">
+            <button id="select-cancel" class="pill pill-quiet" type="button"></button>
+            <button id="print-selected" class="pill" type="button" disabled></button>
           </div>
         </header>
         <div id="binder" class="binder"></div>
@@ -99,6 +104,13 @@
 
     <div id="flash" class="flash" aria-hidden="true"></div>
     <div id="toast" class="toast" role="status" hidden></div>
+    <dialog id="print-dialog" class="print-dialog" aria-labelledby="print-title">
+      <h2 id="print-title">Hvor stort skal det printes?</h2>
+      <p id="print-count" class="print-count"></p>
+      <div id="print-sizes" class="print-sizes"></div>
+      <button id="print-cancel" class="pill pill-quiet" type="button">Annuller</button>
+    </dialog>
+
     <div id="print-sheet" class="print-sheet"></div>
     <video id="video" class="video-source" playsinline muted autoplay></video>
     <script type="module" src="/src/main.ts"></script>

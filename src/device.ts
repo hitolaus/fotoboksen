@@ -1,3 +1,5 @@
+import { fitInBox, gridFor, PAD, PAGE, sheetsFor, type PrintSize } from './print';
+
 /** Browser plumbing: camera, sound, screen wake lock, print and share. */
 
 export class CameraError extends Error {}
@@ -83,12 +85,27 @@ export async function keepAwake(): Promise<void> {
   });
 }
 
-export async function printImage(url: string): Promise<void> {
-  const sheet = document.getElementById('print-sheet')!;
-  const img = sheet.querySelector('img') ?? sheet.appendChild(document.createElement('img'));
-  img.alt = '';
-  img.src = url;
-  await img.decode();
+export interface PrintItem {
+  url: string;
+  /** the picture's width / height */
+  ratio: number;
+}
+
+/** Lays the pictures out on A4 sheets at the chosen size (in millimetres) and opens the print dialog. */
+export async function printPictures(items: PrintItem[], size: PrintSize): Promise<void> {
+  const host = document.getElementById('print-sheet')!;
+  const { cols } = gridFor(size);
+  host.innerHTML = sheetsFor(items.length, size)
+    .map(
+      (sheet) => `<div class="print-page" style="--cols:${cols};--bw:${size.box.w}mm;--bh:${size.box.h}mm;--pw:${PAGE.w}mm;--ph:${PAGE.h}mm;--px:${PAD.x}mm;--py:${PAD.y}mm">${sheet
+        .map((i) => {
+          const r = fitInBox(items[i].ratio, size.box);
+          return `<div class="print-cell"><img src="${items[i].url}" alt="" style="width:${r.w.toFixed(2)}mm;height:${r.h.toFixed(2)}mm"></div>`;
+        })
+        .join('')}</div>`,
+    )
+    .join('');
+  await Promise.all([...host.querySelectorAll('img')].map((img) => img.decode().catch(() => undefined)));
   window.print();
 }
 

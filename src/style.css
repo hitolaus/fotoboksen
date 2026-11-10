@@ -907,6 +907,146 @@ body[data-counting] .shutter-row {
   display: none;
 }
 
+/* choosing pictures to print together */
+.gallery-tools-select,
+#gallery[data-selecting='true'] .gallery-tools:not(.gallery-tools-select),
+#gallery[data-selecting='true'] #gallery-back {
+  display: none;
+}
+
+#gallery[data-selecting='true'] .gallery-tools-select {
+  display: flex;
+}
+
+#gallery[data-selecting='true'] .gallery-head {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.pocket {
+  position: relative;
+}
+
+.pocket[aria-pressed]::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  background: rgb(0 0 0 / 0.35);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.4);
+}
+
+.pocket[aria-pressed='true'] {
+  outline: 5px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.pocket[aria-pressed='true']::after {
+  background: var(--gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23141a4d' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 70% no-repeat;
+}
+
+.pocket[aria-pressed='false'] img {
+  opacity: 0.75;
+}
+
+/* print size */
+.print-dialog {
+  margin: auto;
+  border: 0;
+  border-radius: 28px;
+  padding: 28px 32px;
+  width: min(760px, calc(100vw - 32px));
+  background: var(--navy-2);
+  color: var(--cream);
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.5);
+}
+
+.print-dialog[open] {
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+}
+
+.print-dialog::backdrop {
+  background: rgb(10 13 40 / 0.7);
+}
+
+.print-dialog h2 {
+  font-size: clamp(28px, 4dvh, 36px);
+  color: var(--gold);
+  text-align: center;
+}
+
+.print-count {
+  font-weight: 800;
+  font-size: 20px;
+  margin-top: -8px;
+}
+
+.print-sizes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.print-size {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 18px 12px 16px;
+  border-radius: 22px;
+  background: rgb(255 255 255 / 0.08);
+  text-align: center;
+  transition: transform 0.12s, background-color 0.2s;
+}
+
+.print-size:active {
+  transform: scale(0.97);
+  background: rgb(255 255 255 / 0.16);
+}
+
+/* a little A4 sheet with one grey box per picture slot */
+.mini-sheet {
+  width: 84px;
+  aspect-ratio: 210 / 297;
+  background: #ffffff;
+  border-radius: 3px;
+  padding: 5px;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
+  gap: 3px;
+  margin-bottom: 6px;
+  box-shadow: 0 6px 16px rgb(0 0 0 / 0.35);
+}
+
+.mini-sheet i {
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+.print-size-label {
+  font-family: var(--display);
+  font-size: 30px;
+  color: var(--gold);
+}
+
+.print-size-hint {
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.print-size-sum {
+  font-size: 15px;
+  font-weight: 800;
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ---------- viewer ---------- */
 
 .viewer {
@@ -1577,12 +1717,16 @@ body[data-theme='blokland'] .countdown-hint {
 }
 
 @media print {
+  /* no page margin: with nowhere to put them, Safari and Chrome leave out their header and footer */
   @page {
-    margin: 6mm;
+    size: A4;
+    margin: 0;
   }
 
-  body {
-    background: #fff;
+  html,
+  body,
+  body[data-theme] {
+    background: #fff !important;
     height: auto;
     overflow: visible;
   }
@@ -1596,14 +1740,32 @@ body[data-theme='blokland'] .countdown-hint {
   }
 
   .print-sheet {
+    display: block;
+  }
+
+  /* our sheet: A4 minus the strip left free for Safari's footer, with our own white border as padding (PAGE and PAD in print.ts) */
+  .print-page {
+    box-sizing: border-box;
+    width: var(--pw);
+    height: var(--ph);
+    padding: var(--py) var(--px);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), var(--bw));
+    grid-auto-rows: var(--bh);
+    gap: 4mm;
+    justify-content: center;
+    align-content: center;
+    break-after: page;
+  }
+
+  .print-page:last-child {
+    break-after: auto;
+  }
+
+  .print-cell {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-  }
-
-  .print-sheet img {
-    max-width: 100%;
-    max-height: 100%;
   }
 }
