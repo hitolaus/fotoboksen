@@ -1,6 +1,6 @@
 import { CARD_BADGE, CARD_TITLE } from './config';
 import { coverCrop, type CardLayout, type Rect } from './geometry';
-import { applyPixelEffect, pixelBlock, type EffectId } from './effects';
+import { applyPixelEffect, pixelBlock, type EffectId, type Pixels } from './effects';
 import type { CardType } from './cardTypes';
 import { ELEMENT_PATHS, type ElementIcon } from './icons';
 import { cardNumberLabel, dateLabel } from './powers';
@@ -211,6 +211,8 @@ export class ArtPainter {
     radius: number,
     effect: EffectId,
     t: number,
+    /** a theme's own finish over every effect, e.g. Stumfilm's black-and-white film stock */
+    post?: (img: Pixels, t: number) => void,
   ) {
     const w = Math.round(art.w);
     const h = Math.round(art.h);
@@ -236,6 +238,24 @@ export class ArtPainter {
       this.smallCtx.restore();
       c.imageSmoothingEnabled = false;
       c.drawImage(this.small, 0, 0, sw, sh, 0, 0, sw * block, sh * block);
+    } else if (effect === 'blod') {
+      // soft focus: the picture at a fifth of the size, then smoothed back up
+      const sw = Math.max(1, Math.round(w / 5));
+      const sh = Math.max(1, Math.round(h / 5));
+      this.small.width = sw;
+      this.small.height = sh;
+      this.smallCtx.save();
+      this.smallCtx.translate(sw, 0);
+      this.smallCtx.scale(-1, 1);
+      this.smallCtx.drawImage(src, crop.x, crop.y, crop.w, crop.h, 0, 0, sw, sh);
+      this.smallCtx.restore();
+      c.translate(w, 0);
+      c.scale(-1, 1);
+      c.drawImage(src, crop.x, crop.y, crop.w, crop.h, 0, 0, w, h);
+      c.setTransform(1, 0, 0, 1, 0, 0);
+      c.globalAlpha = 0.65;
+      c.drawImage(this.small, 0, 0, sw, sh, 0, 0, w, h);
+      c.globalAlpha = 1;
     } else if (effect === 'spejl') {
       // the mirrored picture, then its left half folded over onto the right
       c.translate(w, 0);
@@ -249,9 +269,11 @@ export class ArtPainter {
     }
     c.restore();
 
-    if (effect === 'holo' || effect === 'tegneserie' || effect === 'pop') {
+    const pixelEffect = effect === 'holo' || effect === 'tegneserie' || effect === 'pop' || effect === 'kontrast';
+    if (pixelEffect || post) {
       const img = c.getImageData(0, 0, w, h);
-      applyPixelEffect(effect, img, t);
+      if (pixelEffect) applyPixelEffect(effect, img, t);
+      post?.(img, t);
       c.putImageData(img, 0, 0);
     }
 

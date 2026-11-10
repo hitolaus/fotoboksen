@@ -80,3 +80,19 @@ FIRST VIEWPORT: Centre: one 3:4 print, photo window on the 70-unit block grid, i
 FORM: the direction was set by the user's request and the two answers above, so no concept roll ran and there is no seed. Signature move: items and banner never cover faces (blokLayout.faces, side items reach at most 60px into the photo, tested); the reveal drops in ten hard steps.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Direction contract: Stumfilm (fifth theme)
+
+User's words: "In this theme pictures should be in black and white and it should be in a old black and white style the ui, think 1930s". User chose the name Stumfilm and a silent-film caption as the surprise.
+
+THESIS: Every photo is a still from a 1930s silent film: black-and-white film stock with grain, vignette and flicker, an Art Deco silver frame, and a title card under it with the caption. Refuses sepia nostalgia and colour.
+
+OWN-WORLD: Black (#0c0c0c), panel (#1b1b1b), silver rules (#c9c9c9), paper white (#f4f4f0); no colour anywhere, pictures included. Limelight for display (title cards, shutter, countdown), Josefin Sans 600 for labels. Chrome is title-card plates: near-square corners and thin silver double rules; the chosen state is a white plate.
+
+STORY: Kid picks a frame ornament (Klassisk, Vifte, Stråler, Perler) and a black-and-white effect, taps "Tag billede!", a film-leader countdown, the still opens with an iris and the title card reveals a caption like "Og så kom kagen …".
+
+FIRST VIEWPORT: Centre: one 3:4 print, film still above the caption card in a silver Art Deco frame. Left "Ramme" four chips, right "Effekt" six black-and-white effects (Normal, Kontrast, Blød, Tegneserie, Spejl, Pixel), white "Tag billede!" plate, Skift tema bottom left, Samling bottom right.
+
+FORM: the direction was set by the user's request and the two answers above, so no concept roll ran and there is no seed. Signature move: the theme's film finish runs on every effect so nothing in colour reaches the print (tested); film-leader countdown; iris reveal.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

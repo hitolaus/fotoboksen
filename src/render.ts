@@ -3,8 +3,9 @@ import { cardType } from './cardTypes';
 import { drawCoverOverlay, drawSampleScene, loadCoverFonts } from './cover';
 import { drawPurikuraOver, drawPurikuraUnder, loadPurikuraFonts } from './purikura';
 import { drawBlokOver, drawBlokUnder, loadBlokFonts } from './blokrender';
-import type { EffectId } from './effects';
-import { blokLayout, cardLayout, coverLayout, purikuraLayout, type Rect } from './geometry';
+import { drawStumOver, drawStumUnder, loadStumFonts } from './stumrender';
+import { film, type EffectId, type Pixels } from './effects';
+import { blokLayout, cardLayout, coverLayout, purikuraLayout, stumLayout, type Rect } from './geometry';
 import { THEMES, type Surprise, type ThemeId } from './themes';
 
 export interface RenderInfo {
@@ -20,6 +21,8 @@ interface Painter {
   artRadius(scale: number): number;
   under?(ctx: CanvasRenderingContext2D, scale: number, frameId: string, info: RenderInfo): void;
   over?(ctx: CanvasRenderingContext2D, scale: number, frameId: string, info: RenderInfo): void;
+  /** a finish applied to the photo after any effect */
+  post?: (img: Pixels, t: number) => void;
 }
 
 export const PAINTERS: Record<ThemeId, Painter> = {
@@ -52,6 +55,14 @@ export const PAINTERS: Record<ThemeId, Painter> = {
     under: (ctx, s, frameId, info) => drawBlokUnder(ctx, s, frameId, info),
     over: (ctx, s, frameId, info) => drawBlokOver(ctx, s, frameId, info),
   },
+  stumfilm: {
+    art: (s) => stumLayout(s).photo,
+    artRadius: () => 0,
+    under: (ctx, s, frameId, info) => drawStumUnder(ctx, s, frameId, info),
+    over: (ctx, s) => drawStumOver(ctx, s),
+    // every picture in this theme is black-and-white film stock
+    post: film,
+  },
 };
 
 /** Sample surprises for the start screen tiles, so each tile looks like a finished picture. */
@@ -80,7 +91,7 @@ export function drawThemeTile(canvas: HTMLCanvasElement, theme: ThemeId, scale: 
 }
 
 export async function loadFonts(): Promise<void> {
-  await Promise.all([loadCardFonts(), loadCoverFonts(), loadPurikuraFonts(), loadBlokFonts()]);
+  await Promise.all([loadCardFonts(), loadCoverFonts(), loadPurikuraFonts(), loadBlokFonts(), loadStumFonts()]);
 }
 
 /** Renders the finished picture at full size and returns it as a JPEG. */
@@ -104,7 +115,7 @@ export async function renderFinal(
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, width, height);
   p.under?.(ctx, 1, frameId, info);
-  new ArtPainter().paint(ctx, src, srcW, srcH, p.art(1), p.artRadius(1), effect, t);
+  new ArtPainter().paint(ctx, src, srcW, srcH, p.art(1), p.artRadius(1), effect, t, p.post);
   p.over?.(ctx, 1, frameId, info);
   return new Promise((resolve, reject) =>
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('Kunne ikke gemme billedet'))), 'image/jpeg', 0.92),

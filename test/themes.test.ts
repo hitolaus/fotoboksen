@@ -6,8 +6,8 @@ import { coverLayout, intersects, COVER_W, COVER_H } from '../src/geometry';
 import { POWERS } from '../src/powers';
 
 describe('themes', () => {
-  it('offers Samlekort, Kawaii and Blokland on the start screen, and keeps Forsiden hidden but working', () => {
-    expect(visibleThemes().map((t) => t.id)).toEqual(['kort', 'kawaii', 'blokland']);
+  it('offers Samlekort, Kawaii, Blokland and Stumfilm on the start screen, and keeps Forsiden hidden but working', () => {
+    expect(visibleThemes().map((t) => t.id)).toEqual(['kort', 'kawaii', 'blokland', 'stumfilm']);
     expect(THEME_IDS).toContain('forside');
     expect(THEMES.forside.hidden).toBe(true);
   });

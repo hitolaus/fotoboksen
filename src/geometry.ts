@@ -183,3 +183,25 @@ export const ITEM_SLOTS: StickerSlot[] = [
   { x: 70, y: 1040, size: 84, rot: 0 },
   { x: 980, y: 1064, size: 90, rot: 0 },
 ];
+
+/** The Stumfilm print: a film still above a silent-film caption card, on the 1050 x 1400 grid (3:4). */
+export const STUM_W = 1050;
+export const STUM_H = 1400;
+
+export interface StumLayout {
+  page: Rect;
+  photo: Rect;
+  caption: Rect;
+}
+
+const STUM_BASE: StumLayout = {
+  page: { x: 0, y: 0, w: STUM_W, h: STUM_H },
+  photo: { x: 80, y: 80, w: 890, h: 740 },
+  caption: { x: 80, y: 860, w: 890, h: 420 },
+};
+
+export function stumLayout(scale = 1): StumLayout {
+  const out = {} as StumLayout;
+  for (const key of Object.keys(STUM_BASE) as (keyof StumLayout)[]) out[key] = scaleRect(STUM_BASE[key], scale);
+  return out;
+}

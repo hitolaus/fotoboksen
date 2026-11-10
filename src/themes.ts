@@ -2,11 +2,13 @@ import { CARD_TYPES } from './cardTypes';
 import { MAGAZINES, pickCoverStory } from './magazine';
 import { STICKER_SETS, pickPhrase, shapeSvg } from './kawaii';
 import { WORLDS, blockSvg, pickTitle } from './blokland';
+import { FRAME_STYLES, STUM_EFFECTS, pickCaption } from './stumfilm';
+import { DEFAULT_EFFECTS, effectsById, type Effect, type EffectId } from './effects';
 import { cardNumberLabel, pickPower, pickStrength, type Rand } from './powers';
-import { BLOK_H, BLOK_W, CARD_H, CARD_W, COVER_H, COVER_W, PURI_H, PURI_W } from './geometry';
+import { BLOK_H, BLOK_W, CARD_H, CARD_W, COVER_H, COVER_W, PURI_H, PURI_W, STUM_H, STUM_W } from './geometry';
 import { elementIcon, uiIcon } from './icons';
 
-export type ThemeId = 'kort' | 'forside' | 'kawaii' | 'blokland';
+export type ThemeId = 'kort' | 'forside' | 'kawaii' | 'blokland' | 'stumfilm';
 
 /** One choice in the left picker: a card type or a magazine. */
 export interface FrameOption {
@@ -37,6 +39,8 @@ export interface Theme {
   height: number;
   framesHeading: string;
   frames: FrameOption[];
+  /** the effects this theme offers; most use DEFAULT_EFFECTS */
+  effects?: EffectId[];
   shutterLabel: string;
   surprise(frameId: string, rand: Rand, previous?: string): Surprise;
   resultTitle(number: number): string;
@@ -127,7 +131,31 @@ export const THEMES: Record<ThemeId, Theme> = {
     // the banner on the print already shows the new title
     resultLabel: '',
   },
+  stumfilm: {
+    id: 'stumfilm',
+    name: 'Stumfilm',
+    width: STUM_W,
+    height: STUM_H,
+    framesHeading: 'Ramme',
+    frames: FRAME_STYLES.map((f) => ({
+      id: f.id,
+      label: f.label,
+      c1: '#2a2a2a',
+      c2: '#0c0c0c',
+      ink: '#e6e6e6',
+      iconSvg: uiIcon(f.id),
+    })),
+    effects: STUM_EFFECTS,
+    shutterLabel: 'Tag billede!',
+    surprise: (_frame, rand, previous) => ({ text: pickCaption(rand, previous) }),
+    resultTitle: () => 'Slut!',
+    // the caption card on the print already says the line
+    resultLabel: '',
+  },
 };
+
+/** The effect chips a theme shows, in order. */
+export const effectsFor = (theme: Theme): Effect[] => effectsById(theme.effects ?? DEFAULT_EFFECTS);
 
 export const THEME_IDS = Object.keys(THEMES) as ThemeId[];
 

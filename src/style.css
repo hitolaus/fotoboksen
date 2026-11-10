@@ -176,6 +176,25 @@ body[data-screen='gallery'] #gallery {
   transform: none;
 }
 
+/* the Stumfilm start tile: a silver Art Deco sunburst on black */
+.card-back-stumfilm {
+  --back-ray-a: #2b2b2b;
+  --back-ray-b: #101010;
+  --back-ring: rgb(220 220 220 / 0.3);
+  --back-rim: #d6d6d6;
+  --back-rim-deep: #0c0c0c;
+  border-radius: 1%;
+  filter: grayscale(1);
+}
+
+.card-back-stumfilm .card-back-title {
+  font-family: 'Limelight', serif;
+  font-size: clamp(18px, 14cqi, 64px);
+  color: #f4f4f0;
+  text-shadow: 0 4px 16px rgb(0 0 0 / 0.8);
+  transform: none;
+}
+
 @keyframes foil-drift {
   to {
     background-position: 300% 300%;
@@ -202,13 +221,14 @@ body[data-screen='gallery'] #gallery {
   min-height: 0;
   display: flex;
   justify-content: center;
-  align-items: stretch;
+  /* tiles and their name plates stay together, centred in the row */
+  align-items: center;
   gap: clamp(24px, 5vw, 72px);
 }
 
 .theme-pick {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
   justify-items: center;
   gap: 16px;
   min-height: 0;
@@ -220,9 +240,9 @@ body[data-screen='gallery'] #gallery {
 }
 
 .theme-art {
-  /* as tall as the row allows, but never so wide that two tiles overflow a portrait screen (5:7 tiles) */
+  /* as tall as the screen allows below the title (300px for title, name plate and hint), but never so wide that the tiles overflow */
   height: min(
-    100%,
+    calc(100dvh - 300px),
     calc((100vw - 2 * var(--pad) - (var(--count, 2) - 1) * clamp(24px, 5vw, 72px)) / var(--count, 2) * 1.4)
   );
   min-height: 0;
@@ -255,6 +275,13 @@ body[data-screen='gallery'] #gallery {
   font-family: 'Pixelify Sans', monospace;
   font-weight: 700;
   border-radius: 0;
+}
+
+[data-theme-pick='stumfilm'] .theme-name {
+  background: #f4f4f0;
+  color: #0c0c0c;
+  font-family: 'Limelight', serif;
+  border-radius: 2px;
 }
 
 [data-theme-pick='forside'] .theme-name {
@@ -301,7 +328,8 @@ body[data-screen='gallery'] #gallery {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* both columns start at the top, so their headings line up when one has fewer chips */
+  justify-content: flex-start;
   gap: 14px;
   min-height: 0;
   transition: opacity 0.3s;
@@ -1583,6 +1611,250 @@ body[data-theme='blokland'] .countdown-hint {
   display: none;
 }
 
+/* ---------- Stumfilm: the 1930s black-and-white silent-film theme ---------- */
+
+body[data-theme='stumfilm'] {
+  --sf-black: #0c0c0c;
+  --sf-panel: #1b1b1b;
+  --sf-silver: #c9c9c9;
+  --sf-white: #f4f4f0;
+  background: radial-gradient(120% 90% at 50% 40%, #2a2a2a, var(--sf-black) 70%);
+  background-color: var(--sf-black);
+  color: var(--sf-white);
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+}
+
+body[data-theme='stumfilm'] h1,
+body[data-theme='stumfilm'] h2,
+body[data-theme='stumfilm'] .shutter,
+body[data-theme='stumfilm'] .countdown-num,
+body[data-theme='stumfilm'] .countdown-hint,
+body[data-theme='stumfilm'] .result-power {
+  font-family: 'Limelight', serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+body[data-theme='stumfilm'] .picker h2,
+body[data-theme='stumfilm'] .result-side h1,
+body[data-theme='stumfilm'] .gallery-head h1 {
+  color: var(--sf-white);
+}
+
+body[data-theme='stumfilm'] .gallery-count {
+  font-family: 'Josefin Sans', sans-serif;
+  color: var(--sf-silver);
+}
+
+/* cinema title-card chrome: black plates in a thin silver double rule, near-square corners */
+body[data-theme='stumfilm'] .chip,
+body[data-theme='stumfilm'] .pill,
+body[data-theme='stumfilm'] .shutter,
+body[data-theme='stumfilm'] .gallery-btn .count,
+body[data-theme='stumfilm'] .toast,
+body[data-theme='stumfilm'] .start-error,
+body[data-theme='stumfilm'] .print-dialog,
+body[data-theme='stumfilm'] .print-size {
+  border-radius: 2px;
+}
+
+body[data-theme='stumfilm'] .chip,
+body[data-theme='stumfilm'] .pill-quiet {
+  background: var(--sf-panel);
+  color: var(--sf-white);
+  box-shadow:
+    inset 0 0 0 1px var(--sf-silver),
+    inset 0 0 0 4px var(--sf-panel),
+    inset 0 0 0 5px rgb(201 201 201 / 0.45);
+}
+
+body[data-theme='stumfilm'] .chip[aria-pressed='true'],
+body[data-theme='stumfilm'] .pill:not(.pill-quiet):not(.pill-danger),
+body[data-theme='stumfilm'] .gallery-btn .count {
+  background: var(--sf-white);
+  color: var(--sf-black);
+  box-shadow:
+    inset 0 0 0 2px var(--sf-black),
+    inset 0 0 0 4px var(--sf-white),
+    inset 0 0 0 5px var(--sf-black);
+}
+
+body[data-theme='stumfilm'] .gallery-btn .count {
+  box-shadow: none;
+}
+
+body[data-theme='stumfilm'] .chip-disc {
+  border-radius: 50%;
+  background: var(--sf-black);
+  color: var(--sf-white);
+  box-shadow: inset 0 0 0 1.5px var(--sf-silver);
+}
+
+body[data-theme='stumfilm'] .chip[aria-pressed='true'] .chip-disc {
+  background: var(--sf-black);
+  color: var(--sf-white);
+}
+
+body[data-theme='stumfilm'] .shutter {
+  background: var(--sf-white);
+  color: var(--sf-black);
+  box-shadow:
+    0 0 0 4px var(--sf-black),
+    0 0 0 6px var(--sf-silver),
+    0 16px 36px 4px rgb(0 0 0 / 0.6);
+}
+
+body[data-theme='stumfilm'] button:focus-visible {
+  outline-color: var(--sf-white);
+}
+
+body[data-theme='stumfilm'] .print-dialog {
+  background: var(--sf-panel);
+  box-shadow:
+    inset 0 0 0 1px var(--sf-silver),
+    0 30px 80px rgb(0 0 0 / 0.6);
+}
+
+body[data-theme='stumfilm'] .print-dialog h2,
+body[data-theme='stumfilm'] .print-size-label {
+  font-family: 'Limelight', serif;
+  color: var(--sf-white);
+}
+
+body[data-theme='stumfilm'] .mini-sheet i {
+  background: var(--sf-black);
+}
+
+body[data-theme='stumfilm'] .pocket[aria-pressed='true'] {
+  outline-color: var(--sf-white);
+}
+
+body[data-theme='stumfilm'] .pocket[aria-pressed='true']::after {
+  background: var(--sf-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230c0c0c' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 70% no-repeat;
+}
+
+/* only Josefin Sans 600 is loaded; ask for it rather than let the browser fake an 800 */
+body[data-theme='stumfilm'] .chip,
+body[data-theme='stumfilm'] .pill,
+body[data-theme='stumfilm'] .toast {
+  font-weight: 600;
+}
+
+body[data-theme='stumfilm'] .live-card,
+.tilt[data-theme='stumfilm'] .face,
+.pocket[data-theme='stumfilm'] {
+  border-radius: 0;
+}
+
+body[data-theme='stumfilm'] .sheen {
+  display: none;
+}
+
+/* no colour anywhere: backdrops, the delete button, messages */
+body[data-theme='stumfilm'] .viewer::backdrop,
+body[data-theme='stumfilm'] .print-dialog::backdrop {
+  background: rgb(12 12 12 / 0.9);
+}
+
+body[data-theme='stumfilm'] .pill-danger {
+  background: var(--sf-panel);
+  color: var(--sf-white);
+  box-shadow:
+    inset 0 0 0 1px var(--sf-silver),
+    inset 0 0 0 4px var(--sf-panel),
+    inset 0 0 0 5px rgb(201 201 201 / 0.45);
+}
+
+/* armed: a heavy white frame on black, unlike any other button, so "tap again" stands out without colour */
+body[data-theme='stumfilm'] .pill-danger.armed {
+  background: var(--sf-black);
+  color: var(--sf-white);
+  box-shadow: inset 0 0 0 4px var(--sf-white);
+}
+
+body[data-theme='stumfilm'] .toast {
+  background: var(--sf-white);
+  color: var(--sf-black);
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+body[data-theme='stumfilm'] .start-error {
+  background: var(--sf-panel);
+  box-shadow: inset 0 0 0 1px var(--sf-silver);
+}
+
+/* the countdown is an old film leader: crosshair, rings and a sweeping hand over the still */
+body[data-theme='stumfilm'] .countdown {
+  inset: 5.7% 7.6% 41.4% 7.6%;
+  background:
+    linear-gradient(rgb(244 244 240 / 0.55), rgb(244 244 240 / 0.55)) center / 2px 100% no-repeat,
+    linear-gradient(rgb(244 244 240 / 0.55), rgb(244 244 240 / 0.55)) center / 100% 2px no-repeat,
+    rgb(12 12 12 / 0.25);
+  overflow: hidden;
+}
+
+body[data-theme='stumfilm'] .countdown::before {
+  content: '';
+  position: absolute;
+  height: 150%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(rgb(244 244 240 / 0.28) 0 40deg, transparent 40deg);
+  animation: leader-sweep 1s linear infinite;
+}
+
+@keyframes leader-sweep {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+body[data-theme='stumfilm'] .budget circle {
+  stroke: rgb(244 244 240 / 0.7);
+  stroke-width: 2;
+}
+
+body[data-theme='stumfilm'] .budget .budget-fill {
+  stroke: var(--sf-white);
+  stroke-width: 4;
+}
+
+body[data-theme='stumfilm'] .countdown-num {
+  color: var(--sf-white);
+  -webkit-text-stroke-color: var(--sf-black);
+  text-shadow: none;
+}
+
+body[data-theme='stumfilm'] .countdown-hint {
+  top: auto;
+  left: auto;
+  bottom: 6%;
+  color: var(--sf-white);
+  -webkit-text-stroke-color: var(--sf-black);
+}
+
+/* the print opens with an iris, like the start of a 1930s reel */
+.tilt[data-theme='stumfilm'] .flipper.reveal {
+  animation-name: iris-in;
+  animation-duration: 1.3s;
+  animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+@keyframes iris-in {
+  0% {
+    clip-path: circle(0% at 50% 32%);
+  }
+  100% {
+    clip-path: circle(110% at 50% 32%);
+  }
+}
+
+.tilt[data-theme='stumfilm'] .face-back,
+.tilt[data-theme='stumfilm'] .foil {
+  display: none;
+}
+
 /* ---------- portrait iPad ---------- */
 
 @media (orientation: portrait) {
@@ -1590,18 +1862,21 @@ body[data-theme='blokland'] .countdown-hint {
     --chip-h: clamp(56px, 7.4dvh, 84px);
   }
 
-  /* in portrait the screen's width sets the tile size, so the name plate follows right under it */
+  /* portrait is narrow: the tiles go two by two */
   .theme-picks {
-    align-items: center;
-  }
-
-  .theme-pick {
-    grid-template-rows: auto auto;
+    flex-wrap: wrap;
+    align-content: center;
+    row-gap: clamp(20px, 3dvh, 36px);
   }
 
   .theme-art {
-    height: calc((100vw - 2 * var(--pad) - (var(--count, 2) - 1) * clamp(24px, 5vw, 72px)) / var(--count, 2) * 1.4);
+    height: min(
+      calc((100dvh - 420px) / 2),
+      calc((100vw - 2 * var(--pad) - clamp(24px, 5vw, 72px)) / 2 * 1.4)
+    );
   }
+
+
 
   #booth {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

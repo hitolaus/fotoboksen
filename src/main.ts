@@ -4,9 +4,11 @@ import '@fontsource/baloo-2/latin-800.css';
 import '@fontsource/anton/latin-400.css';
 import '@fontsource/mochiy-pop-one/latin-400.css';
 import '@fontsource/pixelify-sans/latin-700.css';
+import '@fontsource/limelight/latin-400.css';
+import '@fontsource/josefin-sans/latin-600.css';
 import './style.css';
 
-import { EFFECTS, type EffectId } from './effects';
+import { type EffectId } from './effects';
 import { ArtPainter } from './card';
 import { PAINTERS, drawThemeTile, loadFonts, renderFinal, type RenderInfo } from './render';
 import { startCountdown } from './countdown';
@@ -15,7 +17,7 @@ import { CardStore, type CardRecord } from './store';
 import { PRINT_SIZES, gridFor, printSize, printSummary, type PrintSizeId } from './print';
 import { uiIcon } from './icons';
 import { COUNTDOWN_SECONDS, RESULT_IDLE_SECONDS } from './config';
-import { THEMES, themeOf, isThemeId, visibleThemes, type Theme, type ThemeId } from './themes';
+import { THEMES, effectsFor, themeOf, isThemeId, visibleThemes, type Theme, type ThemeId } from './themes';
 import {
   beep,
   CameraError,
@@ -76,6 +78,8 @@ function applyTheme(id: ThemeId) {
   const theme = THEMES[id];
   state.theme = theme;
   state.frame = theme.frames[0].id;
+  // a theme may not offer the effect chosen in the last one (Stumfilm has no colour effects)
+  if (!effectsFor(theme).some((e) => e.id === state.effect)) state.effect = 'normal';
   state.lastSurprise = undefined;
   document.body.dataset.theme = id;
   document.documentElement.style.setProperty('--ratio', `${theme.width} / ${theme.height}`);
@@ -95,7 +99,7 @@ function renderPickers() {
       <span class="chip-label">${f.label}</span></button>`,
     )
     .join('');
-  $('effects').innerHTML = EFFECTS.map(
+  $('effects').innerHTML = effectsFor(state.theme).map(
     (e) => `<button class="chip chip-effect" type="button" data-effect="${e.id}" aria-pressed="${e.id === state.effect}">
       <span class="chip-disc">${uiIcon(e.id)}</span><span class="chip-label">${e.label}</span></button>`,
   ).join('');
@@ -169,7 +173,17 @@ function frame() {
   pctx.clearRect(0, 0, preview.width, preview.height);
   pctx.drawImage(under, 0, 0);
   if (video.videoWidth) {
-    painter.paint(pctx, video, video.videoWidth, video.videoHeight, p.art(previewScale), p.artRadius(previewScale), state.effect, foilPhase());
+    painter.paint(
+      pctx,
+      video,
+      video.videoWidth,
+      video.videoHeight,
+      p.art(previewScale),
+      p.artRadius(previewScale),
+      state.effect,
+      foilPhase(),
+      p.post,
+    );
   }
   pctx.drawImage(over, 0, 0);
   requestAnimationFrame(frame);
@@ -532,7 +546,7 @@ function renderThemePicks() {
     .map(
       (t) => `<button class="theme-pick" type="button" data-theme-pick="${t.id}">
         ${
-          t.id === 'kort' || t.id === 'kawaii' || t.id === 'blokland'
+          t.id !== 'forside'
             ? `<span class="card-back card-back-${t.id} theme-art"><span class="card-back-title">${t.name}</span></span>`
             : `<canvas class="theme-tile theme-art" style="--ratio:${t.width} / ${t.height}" aria-hidden="true"></canvas>`
         }
