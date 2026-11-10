@@ -94,19 +94,10 @@ body[data-screen='gallery'] #gallery {
  * The app is one fixed layer over the whole screen, painting the theme's background itself
  * (inherited from body); main.ts publishes its height as --app-h for the few sizes worked out
  * from the screen height.
- *
- * In a Home Screen web app with the translucent status bar, iPadOS starts the page under the
- * status bar but makes the viewport only "screen minus status bar" tall, so anything sized to the
- * viewport (inset 0 included) stops one status-bar height short of the bottom. The status bar's
- * height is exactly the top safe-area inset there, so the layer adds it back. In a normal Safari
- * tab the inset is 0 and nothing changes.
  */
 main {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: calc(100% + env(safe-area-inset-top, 0px));
+  inset: 0;
   background: inherit;
 }
 
@@ -1131,6 +1122,41 @@ body[data-counting] .shutter-row {
   display: grid;
   gap: 14px;
   min-width: 240px;
+}
+
+/* ---------- size readout (temporary, for the Home Screen gap) ---------- */
+
+.size-probe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px)
+    env(safe-area-inset-left, 0px);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.size-readout {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  background: #ffffff;
+  color: #111111;
+  font: 600 20px/1.5 ui-monospace, Menlo, monospace;
+  padding: 20px 28px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgb(0 0 0 / 0.5);
+  white-space: pre;
+}
+
+/* the app layer's own edges, in red, so a screenshot shows where it really ends */
+body.show-edges main {
+  outline: 4px solid #ff0000;
+  outline-offset: -4px;
 }
 
 /* ---------- misc ---------- */

@@ -191,6 +191,49 @@ function frame() {
 
 new ResizeObserver(sizePreview).observe(preview);
 
+/*
+ * Temporary size readout for the Home Screen gap: tap the "Fotoboksen" title on the start screen
+ * five times. It lists what the iPad reports and outlines the app layer's edges in red.
+ */
+let titleTaps = 0;
+let titleTimer: ReturnType<typeof setTimeout> | undefined;
+document.querySelector('.start-title')?.addEventListener('click', () => {
+  titleTaps += 1;
+  clearTimeout(titleTimer);
+  titleTimer = setTimeout(() => (titleTaps = 0), 1500);
+  if (titleTaps < 5) return;
+  titleTaps = 0;
+  const probe = document.createElement('div');
+  probe.className = 'size-probe';
+  document.body.appendChild(probe);
+  const cs = getComputedStyle(probe);
+  const main = document.querySelector('main')!.getBoundingClientRect();
+  const vv = window.visualViewport;
+  const lines = [
+    `standalone:        ${matchMedia('(display-mode: standalone)').matches || (navigator as { standalone?: boolean }).standalone === true}`,
+    `screen:            ${screen.width} x ${screen.height}`,
+    `window.inner:      ${innerWidth} x ${innerHeight}`,
+    `html.client:       ${document.documentElement.clientWidth} x ${document.documentElement.clientHeight}`,
+    `visualViewport:    ${vv ? `${Math.round(vv.width)} x ${Math.round(vv.height)} @ ${Math.round(vv.offsetTop)}` : 'n/a'}`,
+    `main rect:         top ${Math.round(main.top)}  bottom ${Math.round(main.bottom)}  h ${Math.round(main.height)}`,
+    `100dvh/100lvh/svh: ${['dvh', 'lvh', 'svh'].map((u) => { const d = document.createElement('div'); d.style.cssText = `position:fixed;height:100${u}`; document.body.appendChild(d); const h = d.getBoundingClientRect().height; d.remove(); return Math.round(h); }).join(' / ')}`,
+    `safe-area t/r/b/l: ${cs.paddingTop} / ${cs.paddingRight} / ${cs.paddingBottom} / ${cs.paddingLeft}`,
+    `devicePixelRatio:  ${devicePixelRatio}`,
+    '',
+    'tryk for at lukke',
+  ];
+  probe.remove();
+  const box = document.createElement('div');
+  box.className = 'size-readout';
+  box.textContent = lines.join('\n');
+  box.addEventListener('click', () => {
+    box.remove();
+    document.body.classList.remove('show-edges');
+  });
+  document.body.appendChild(box);
+  document.body.classList.add('show-edges');
+});
+
 /** The real screen height (see `main` in style.css), for CSS sizes worked out from it. */
 const app = document.querySelector('main')!;
 new ResizeObserver(() => document.documentElement.style.setProperty('--app-h', `${app.clientHeight}px`)).observe(app);
