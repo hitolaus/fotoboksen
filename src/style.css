@@ -891,6 +891,8 @@ body[data-counting] .shutter-row {
   grid-template-columns: repeat(auto-fill, minmax(clamp(130px, 15vw, 190px), 1fr));
   gap: 22px;
   align-content: start;
+  /* each row is as tall as its pictures; without this the rows shrink to fit the screen and the pictures overlap */
+  grid-auto-rows: max-content;
   padding: 6px 6px 24px;
   scrollbar-width: thin;
   scrollbar-color: var(--navy-3) transparent;
@@ -1862,6 +1864,26 @@ body[data-theme='stumfilm'] .countdown-hint {
     --chip-h: clamp(56px, 7.4dvh, 84px);
   }
 
+  /* the gallery header gets two rows: back and title on top, the buttons on their own line below */
+  .gallery-head {
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 14px;
+  }
+
+  .gallery-head h1 {
+    text-align: left;
+  }
+
+  .gallery-tools {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    justify-content: flex-end;
+  }
+
+  #gallery[data-selecting='true'] .gallery-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   /* portrait is narrow: the tiles go two by two */
   .theme-picks {
     flex-wrap: wrap;
@@ -1957,14 +1979,6 @@ body[data-theme='stumfilm'] .countdown-hint {
 
   .result-side {
     text-align: center;
-  }
-
-  .result-actions {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .result-actions .shutter {
-    grid-column: 1 / -1;
   }
 
   .viewer {
