@@ -91,16 +91,22 @@ body[data-screen='gallery'] #gallery {
 }
 
 /*
- * The app is one fixed layer over the whole screen. In a Home Screen web app on iPad the
- * viewport-height units come out shorter than the screen (the status bar is left out), which
- * left a strip at the bottom showing the background starting over. A fixed layer with inset 0
- * always covers the real screen; it paints the theme's background itself (inherited from body),
- * and main.ts publishes its height as --app-h for the few sizes that are worked out from the
- * screen height.
+ * The app is one fixed layer over the whole screen, painting the theme's background itself
+ * (inherited from body); main.ts publishes its height as --app-h for the few sizes worked out
+ * from the screen height.
+ *
+ * In a Home Screen web app with the translucent status bar, iPadOS starts the page under the
+ * status bar but makes the viewport only "screen minus status bar" tall, so anything sized to the
+ * viewport (inset 0 included) stops one status-bar height short of the bottom. The status bar's
+ * height is exactly the top safe-area inset there, so the layer adds it back. In a normal Safari
+ * tab the inset is 0 and nothing changes.
  */
 main {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(100% + env(safe-area-inset-top, 0px));
   background: inherit;
 }
 
