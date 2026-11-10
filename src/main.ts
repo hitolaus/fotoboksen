@@ -294,10 +294,8 @@ function attachTilt(host: HTMLElement) {
 /* ---------- result ---------- */
 
 let resultUrl: string | undefined;
-let resultRecord: CardRecord | undefined;
 
 function showResult(record: CardRecord) {
-  resultRecord = record;
   if (resultUrl) URL.revokeObjectURL(resultUrl);
   resultUrl = URL.createObjectURL(record.image);
   const theme = THEMES[themeOf(record)];
@@ -318,7 +316,6 @@ function armResultIdle() {
 $('result').addEventListener('pointerdown', armResultIdle);
 $('again').addEventListener('click', () => show('booth'));
 $('result-gallery').addEventListener('click', () => show('gallery'));
-$('result-print').addEventListener('click', () => resultRecord && resultUrl && askPrint([printItem(resultRecord, resultUrl)]));
 
 /* ---------- gallery ---------- */
 
@@ -501,7 +498,6 @@ $('viewer-share').addEventListener('click', () => {
 async function boot() {
   $('shutter-icon').innerHTML = uiIcon('camera');
   $('again').innerHTML = `${uiIcon('again')}<span>Igen!</span>`;
-  $('result-print').innerHTML = `${uiIcon('print')}<span>Print</span>`;
   $('result-gallery').innerHTML = `${uiIcon('cards')}<span>Samling</span>`;
   $('gallery-back').innerHTML = `${uiIcon('back')}<span>Tilbage</span>`;
   $('change-theme').innerHTML = `${uiIcon('palette')}<span>Skift tema</span>`;
