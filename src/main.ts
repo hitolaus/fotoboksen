@@ -1,17 +1,19 @@
 import '@fontsource/lilita-one/latin-400.css';
 import '@fontsource/baloo-2/latin-600.css';
 import '@fontsource/baloo-2/latin-800.css';
+import '@fontsource/anton/latin-400.css';
 import './style.css';
 
-import { CARD_TYPES, cardType, type CardTypeId } from './cardTypes';
 import { EFFECTS, type EffectId } from './effects';
-import { cardLayout, CARD_H, CARD_W } from './geometry';
-import { ArtPainter, drawChrome, loadCardFonts, renderFinalCard, type CardInfo } from './card';
+import { ArtPainter } from './card';
+import { PAINTERS, loadFonts, renderFinal, type RenderInfo } from './render';
+import { drawCoverTile } from './cover';
 import { startCountdown } from './countdown';
-import { cardNumberLabel, pickPower, pickStrength } from './powers';
+import { cardNumberLabel } from './powers';
 import { CardStore, type CardRecord } from './store';
-import { elementIcon, uiIcon } from './icons';
+import { uiIcon } from './icons';
 import { COUNTDOWN_SECONDS, RESULT_IDLE_SECONDS } from './config';
+import { THEMES, loadThemePref, saveThemePref, themeOf, isThemeId, type Theme, type ThemeId } from './themes';
 import {
   beep,
   CameraError,
@@ -30,16 +32,26 @@ const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getEleme
 const video = $<HTMLVideoElement>('video');
 const preview = $<HTMLCanvasElement>('preview');
 const pctx = preview.getContext('2d')!;
+const prefs = (() => {
+  try {
+    return window.localStorage;
+  } catch {
+    return undefined;
+  }
+})();
 
 const state = {
   screen: 'start' as Screen,
-  type: 'ild' as CardTypeId,
+  theme: THEMES[loadThemePref(prefs)] as Theme,
+  frame: '',
   effect: 'normal' as EffectId,
   nextNumber: 1,
   count: 0,
-  lastPower: undefined as string | undefined,
+  lastSurprise: undefined as string | undefined,
   counting: false,
+  cameraOn: false,
 };
+state.frame = state.theme.frames[0].id;
 
 let store: CardStore | undefined;
 
@@ -62,14 +74,31 @@ function toast(message: string) {
   setTimeout(() => (el.hidden = true), 3500);
 }
 
+/* ---------- theme ---------- */
+
+function applyTheme(id: ThemeId) {
+  const theme = THEMES[id];
+  state.theme = theme;
+  state.frame = theme.frames[0].id;
+  state.lastSurprise = undefined;
+  document.body.dataset.theme = id;
+  document.documentElement.style.setProperty('--ratio', `${theme.width} / ${theme.height}`);
+  $('types-heading').textContent = theme.framesHeading;
+  $('shutter-label').textContent = theme.shutterLabel;
+  renderPickers();
+  sizePreview();
+}
+
 /* ---------- pickers ---------- */
 
 function renderPickers() {
-  $('types').innerHTML = CARD_TYPES.map(
-    (t) => `<button class="chip" type="button" data-type="${t.id}" aria-pressed="${t.id === state.type}">
-      <span class="chip-disc" style="--c1:${t.light};--c2:${t.dark};color:${t.id === 'lyn' ? '#141a4d' : '#fff7e0'}">${elementIcon(t.icon)}</span>
-      <span class="chip-label">${t.label}</span></button>`,
-  ).join('');
+  $('types').innerHTML = state.theme.frames
+    .map(
+      (f) => `<button class="chip" type="button" data-frame="${f.id}" aria-pressed="${f.id === state.frame}">
+      <span class="chip-disc" style="--c1:${f.c1};--c2:${f.c2};color:${f.ink}">${f.iconSvg}</span>
+      <span class="chip-label">${f.label}</span></button>`,
+    )
+    .join('');
   $('effects').innerHTML = EFFECTS.map(
     (e) => `<button class="chip chip-effect" type="button" data-effect="${e.id}" aria-pressed="${e.id === state.effect}">
       <span class="chip-disc">${uiIcon(e.id)}</span><span class="chip-label">${e.label}</span></button>`,
@@ -84,11 +113,11 @@ function select(group: 'types' | 'effects', btn: HTMLElement) {
 }
 
 $('types').addEventListener('click', (e) => {
-  const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-type]');
+  const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-frame]');
   if (!btn || state.counting) return;
-  state.type = btn.dataset.type as CardTypeId;
+  state.frame = btn.dataset.frame!;
   select('types', btn);
-  chromeKey = '';
+  layerKey = '';
 });
 
 $('effects').addEventListener('click', (e) => {
@@ -101,39 +130,52 @@ $('effects').addEventListener('click', (e) => {
 /* ---------- live preview ---------- */
 
 const painter = new ArtPainter();
-const chrome = document.createElement('canvas');
-let chromeKey = '';
+const under = document.createElement('canvas');
+const over = document.createElement('canvas');
+let layerKey = '';
 let previewScale = 0.6;
 const startedAt = performance.now();
 const foilPhase = () => ((performance.now() - startedAt) / 9000) % 1;
 
-function currentInfo(): CardInfo {
-  return { type: cardType(state.type), number: state.nextNumber, date: new Date() };
-}
+const currentInfo = (): RenderInfo => ({ number: state.nextNumber, date: new Date() });
 
 function sizePreview() {
   const h = preview.getBoundingClientRect().height || 600;
-  previewScale = Math.min(0.85, Math.max(0.4, (h * devicePixelRatio) / CARD_H));
-  preview.width = Math.round(CARD_W * previewScale);
-  preview.height = Math.round(CARD_H * previewScale);
-  chromeKey = '';
+  previewScale = Math.min(0.85, Math.max(0.4, (h * devicePixelRatio) / state.theme.height));
+  preview.width = Math.round(state.theme.width * previewScale);
+  preview.height = Math.round(state.theme.height * previewScale);
+  layerKey = '';
+}
+
+/** The theme's drawing under and over the photo changes rarely, so it is cached and only the photo redraws. */
+function drawLayers() {
+  const p = PAINTERS[state.theme.id];
+  for (const [layer, draw] of [
+    [under, p.under],
+    [over, p.over],
+  ] as const) {
+    layer.width = preview.width;
+    layer.height = preview.height;
+    const c = layer.getContext('2d')!;
+    c.clearRect(0, 0, layer.width, layer.height);
+    draw?.(c, previewScale, state.frame, currentInfo());
+  }
 }
 
 function frame() {
   if (state.screen !== 'booth') return;
-  const key = `${state.type}|${state.nextNumber}|${previewScale}`;
-  const L = cardLayout(previewScale);
-  if (key !== chromeKey) {
-    chrome.width = preview.width;
-    chrome.height = preview.height;
-    const c = chrome.getContext('2d')!;
-    c.clearRect(0, 0, chrome.width, chrome.height);
-    drawChrome(c, L, previewScale, currentInfo());
-    chromeKey = key;
+  const key = `${state.theme.id}|${state.frame}|${state.nextNumber}|${previewScale}`;
+  if (key !== layerKey) {
+    drawLayers();
+    layerKey = key;
   }
+  const p = PAINTERS[state.theme.id];
   pctx.clearRect(0, 0, preview.width, preview.height);
-  pctx.drawImage(chrome, 0, 0);
-  if (video.videoWidth) painter.paint(pctx, video, video.videoWidth, video.videoHeight, L.art, state.effect, foilPhase());
+  pctx.drawImage(under, 0, 0);
+  if (video.videoWidth) {
+    painter.paint(pctx, video, video.videoWidth, video.videoHeight, p.art(previewScale), p.artRadius(previewScale), state.effect, foilPhase());
+  }
+  pctx.drawImage(over, 0, 0);
   requestAnimationFrame(frame);
 }
 
@@ -143,7 +185,7 @@ new ResizeObserver(sizePreview).observe(preview);
 
 let cancelCountdown: (() => void) | undefined;
 
-function takeCard() {
+function takePicture() {
   if (state.counting || !video.videoWidth) return;
   unlockSound();
   state.counting = true;
@@ -175,34 +217,35 @@ async function capture() {
   flash.classList.add('go');
   shutterSound();
 
-  const power = pickPower(Math.random, state.lastPower);
-  const strength = pickStrength(Math.random);
-  const info: CardInfo = { ...currentInfo(), power, strength };
+  const theme = state.theme;
+  const surprise = theme.surprise(state.frame, Math.random, state.lastSurprise);
+  const info: RenderInfo = { ...currentInfo(), surprise };
   const effect = state.effect;
   let image: Blob;
   try {
-    image = await renderFinalCard(video, video.videoWidth, video.videoHeight, effect, foilPhase(), info);
+    image = await renderFinal(theme.id, state.frame, video, video.videoWidth, video.videoHeight, effect, foilPhase(), info);
   } catch {
     endCountdown();
-    toast('Kortet kunne ikke laves. Prøv igen.');
+    toast('Billedet kunne ikke laves. Prøv igen.');
     return;
   }
-  state.lastPower = power;
+  state.lastSurprise = surprise.text;
 
   const record: CardRecord = {
     number: info.number,
     createdAt: Date.now(),
-    type: state.type,
+    theme: theme.id,
+    type: state.frame,
     effect,
-    power,
-    strength,
+    power: surprise.text,
+    strength: surprise.strength,
     image,
   };
   try {
     await store?.add(record);
     state.count += 1;
   } catch {
-    toast('Kortet blev ikke gemt i samlingen. Der er måske ikke mere plads.');
+    toast('Billedet blev ikke gemt i samlingen. Der er måske ikke mere plads.');
   }
   state.nextNumber = info.number + 1;
   updateGalleryButton();
@@ -217,14 +260,19 @@ function endCountdown() {
   $('countdown').hidden = true;
 }
 
-$('shutter').addEventListener('click', takeCard);
+$('shutter').addEventListener('click', takePicture);
 
-/* ---------- tilting holo card ---------- */
+/* ---------- tilting picture (result + viewer) ---------- */
 
-function mountCard(host: HTMLElement, url: string, alt: string, reveal: boolean) {
+const altText = (r: CardRecord) => `${THEMES[themeOf(r)].name} ${cardNumberLabel(r.number)}: ${r.power}`;
+
+function mountPicture(host: HTMLElement, record: CardRecord, url: string, reveal: boolean) {
+  const theme = themeOf(record);
+  host.dataset.theme = theme;
+  host.style.setProperty('--ratio', `${THEMES[theme].width} / ${THEMES[theme].height}`);
   host.innerHTML = `<div class="flipper${reveal ? ' reveal' : ''}">
       <div class="face face-back card-back" aria-hidden="true"><span class="card-back-title">Fotoboksen</span></div>
-      <div class="face face-front"><img src="${url}" alt="${alt}" draggable="false"><span class="foil" aria-hidden="true"></span></div>
+      <div class="face face-front"><img src="${url}" alt="${altText(record)}" draggable="false"><span class="foil" aria-hidden="true"></span></div>
     </div>`;
 }
 
@@ -254,9 +302,11 @@ let resultUrl: string | undefined;
 function showResult(record: CardRecord) {
   if (resultUrl) URL.revokeObjectURL(resultUrl);
   resultUrl = URL.createObjectURL(record.image);
-  $('result-title').textContent = `${cardNumberLabel(record.number)} er klar!`;
+  const theme = THEMES[themeOf(record)];
+  $('result-title').textContent = theme.resultTitle(record.number);
+  $('result-label').textContent = theme.resultLabel;
   $('result-power').textContent = record.power;
-  mountCard($('result-card'), resultUrl, `Kort ${cardNumberLabel(record.number)}: ${record.power}`, true);
+  mountPicture($('result-card'), record, resultUrl, true);
   show('result');
   armResultIdle();
 }
@@ -284,14 +334,15 @@ async function renderGallery() {
   galleryUrls.forEach((u) => URL.revokeObjectURL(u));
   galleryRecords = store ? await store.list() : [];
   galleryUrls = galleryRecords.map((r) => URL.createObjectURL(r.image));
-  $('gallery-count').textContent = `${galleryRecords.length} kort`;
+  $('gallery-count').textContent = `${galleryRecords.length} ${galleryRecords.length === 1 ? 'billede' : 'billeder'}`;
   $('gallery-empty').hidden = galleryRecords.length > 0;
   $<HTMLButtonElement>('share-all').disabled = galleryRecords.length === 0;
   $('binder').innerHTML = galleryRecords
-    .map(
-      (r, i) => `<button class="pocket" type="button" data-index="${i}" aria-label="${cardNumberLabel(r.number)}, ${r.power}">
-        <img src="${galleryUrls[i]}" alt="" loading="lazy" decoding="async"></button>`,
-    )
+    .map((r, i) => {
+      const t = THEMES[themeOf(r)];
+      return `<button class="pocket" type="button" data-index="${i}" data-theme="${t.id}" style="--ratio:${t.width} / ${t.height}" aria-label="${altText(r)}">
+        <img src="${galleryUrls[i]}" alt="" loading="lazy" decoding="async"></button>`;
+    })
     .join('');
 }
 
@@ -302,6 +353,10 @@ $('binder').addEventListener('click', (e) => {
 
 $('gallery-back').addEventListener('click', () => show('booth'));
 $('gallery-first').addEventListener('click', () => show('booth'));
+$('change-theme').addEventListener('click', () => {
+  delete document.body.dataset.theme;
+  show('start');
+});
 $('open-gallery').addEventListener('click', () => !state.counting && show('gallery'));
 $('share-all').addEventListener('click', () =>
   shareFiles(galleryRecords.map((r) => cardFile(r.image, r.number))).catch(() => toast('Billederne kunne ikke deles.')),
@@ -316,8 +371,7 @@ const deleteBtn = $('viewer-delete');
 
 function openViewer(i: number) {
   viewerIndex = i;
-  const r = galleryRecords[i];
-  mountCard($('viewer-card'), galleryUrls[i], `Kort ${cardNumberLabel(r.number)}: ${r.power}`, false);
+  mountPicture($('viewer-card'), galleryRecords[i], galleryUrls[i], false);
   disarmDelete();
   viewer.showModal();
 }
@@ -356,45 +410,55 @@ $('viewer-share').addEventListener('click', () => {
 /* ---------- start ---------- */
 
 async function boot() {
-  renderPickers();
   $('shutter-icon').innerHTML = uiIcon('camera');
   $('again').innerHTML = `${uiIcon('again')}<span>Igen!</span>`;
   $('result-print').innerHTML = `${uiIcon('print')}<span>Print</span>`;
   $('result-gallery').innerHTML = `${uiIcon('cards')}<span>Samling</span>`;
   $('gallery-back').innerHTML = `${uiIcon('back')}<span>Tilbage</span>`;
+  $('change-theme').innerHTML = `${uiIcon('palette')}<span>Skift tema</span>`;
   $('share-all').innerHTML = `${uiIcon('share')}<span>Del alle</span>`;
   $('viewer-print').innerHTML = `${uiIcon('print')}<span>Print</span>`;
   $('viewer-share').innerHTML = `${uiIcon('share')}<span>Del</span>`;
   $('viewer-close').innerHTML = `${uiIcon('close')}<span>Luk</span>`;
   attachTilt($('result-card'));
   attachTilt($('viewer-card'));
+  document.querySelector(`[data-theme-pick="${state.theme.id}"]`)?.classList.add('last');
 
   try {
     store = await CardStore.open();
     state.nextNumber = await store.nextNumber();
     state.count = await store.count();
   } catch {
-    toast('Samlingen kan ikke gemmes i denne browser. Kort vises, men gemmes ikke.');
+    toast('Samlingen kan ikke gemmes i denne browser. Billeder vises, men gemmes ikke.');
   }
   updateGalleryButton();
-  await loadCardFonts();
+  await loadFonts();
+  drawCoverTile($<HTMLCanvasElement>('cover-tile'), 0.5);
 }
 
 const booting = boot();
 
-$('start-btn').addEventListener('click', async () => {
+document.querySelector('.theme-picks')!.addEventListener('click', async (e) => {
+  const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-theme-pick]');
+  const id = btn?.dataset.themePick;
+  if (!isThemeId(id)) return;
   unlockSound();
   const err = $('start-error');
   err.hidden = true;
   try {
-    await Promise.all([booting, startCamera(video)]);
+    await Promise.all([booting, state.cameraOn ? undefined : startCamera(video)]);
   } catch (e) {
     err.textContent = e instanceof CameraError ? e.message : 'Noget gik galt. Genindlæs siden og prøv igen.';
     err.hidden = false;
     return;
   }
-  void keepAwake();
-  void navigator.storage?.persist?.();
+  if (!state.cameraOn) {
+    state.cameraOn = true;
+    void keepAwake();
+    void navigator.storage?.persist?.();
+  }
+  saveThemePref(prefs, id);
+  for (const b of document.querySelectorAll('[data-theme-pick]')) b.classList.toggle('last', b === btn);
   show('booth');
-  sizePreview();
+  applyTheme(id);
 });

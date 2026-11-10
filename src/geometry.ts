@@ -50,3 +50,39 @@ export function cardLayout(scale = 1): CardLayout {
   for (const key of Object.keys(BASE) as (keyof CardLayout)[]) out[key] = scaleRect(BASE[key], scale);
   return out;
 }
+
+export const intersects = (a: Rect, b: Rect): boolean =>
+  a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+
+/** The magazine cover is designed on a 1050 x 1400 grid (3:4, a magazine page). */
+export const COVER_W = 1050;
+export const COVER_H = 1400;
+
+export interface CoverLayout {
+  cover: Rect;
+  masthead: Rect;
+  issue: Rect;
+  teaser: Rect;
+  burst: Rect;
+  headline: Rect;
+  barcode: Rect;
+  /** the band where a group of kids stands in the photo, edge to edge; cover lines stay out of it */
+  faces: Rect;
+}
+
+const COVER_BASE: CoverLayout = {
+  cover: { x: 0, y: 0, w: COVER_W, h: COVER_H },
+  masthead: { x: 0, y: 0, w: COVER_W, h: 232 },
+  issue: { x: 0, y: 232, w: COVER_W, h: 52 },
+  teaser: { x: 40, y: 304, w: 400, h: 70 },
+  burst: { x: 846, y: 24, w: 184, h: 184 },
+  headline: { x: 40, y: 1036, w: 760, h: 324 },
+  barcode: { x: 846, y: 1214, w: 164, h: 146 },
+  faces: { x: 0, y: 400, w: COVER_W, h: 630 },
+};
+
+export function coverLayout(scale = 1): CoverLayout {
+  const out = {} as CoverLayout;
+  for (const key of Object.keys(COVER_BASE) as (keyof CoverLayout)[]) out[key] = scaleRect(COVER_BASE[key], scale);
+  return out;
+}

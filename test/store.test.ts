@@ -61,3 +61,16 @@ describe('CardStore', () => {
     expect(await b.count()).toBe(1);
   });
 });
+
+describe('CardStore with themes', () => {
+  it('keeps the theme of each picture, and reads cards saved before themes as cards', async () => {
+    const { themeOf } = await import('../src/themes');
+    const s = await fresh();
+    await s.add(card(1));
+    await s.add(card(2, { theme: 'forside', type: 'gamer', power: 'Ny highscore i fnis', strength: undefined }));
+    const [cover, old] = await s.list();
+    expect(themeOf(cover)).toBe('forside');
+    expect(cover.strength).toBeUndefined();
+    expect(themeOf(old)).toBe('kort');
+  });
+});

@@ -1,0 +1,111 @@
+import { CARD_TYPES } from './cardTypes';
+import { MAGAZINES, pickCoverStory } from './magazine';
+import { cardNumberLabel, pickPower, pickStrength, type Rand } from './powers';
+import { CARD_H, CARD_W, COVER_H, COVER_W } from './geometry';
+import { elementIcon, uiIcon } from './icons';
+
+export type ThemeId = 'kort' | 'forside';
+
+/** One choice in the left picker: a card type or a magazine. */
+export interface FrameOption {
+  id: string;
+  label: string;
+  /** gradient and glyph colour of the chip's disc */
+  c1: string;
+  c2: string;
+  ink: string;
+  iconSvg: string;
+}
+
+/** What the booth reveals after the shot. `text` is the main line (superpower or headline). */
+export interface Surprise {
+  text: string;
+  strength?: number;
+  burst?: string;
+  teaser?: string;
+}
+
+export interface Theme {
+  id: ThemeId;
+  /** name on the start screen */
+  name: string;
+  width: number;
+  height: number;
+  framesHeading: string;
+  frames: FrameOption[];
+  shutterLabel: string;
+  surprise(frameId: string, rand: Rand, previous?: string): Surprise;
+  resultTitle(number: number): string;
+  resultLabel: string;
+}
+
+export const THEMES: Record<ThemeId, Theme> = {
+  kort: {
+    id: 'kort',
+    name: 'Samlekort',
+    width: CARD_W,
+    height: CARD_H,
+    framesHeading: 'Korttype',
+    frames: CARD_TYPES.map((t) => ({
+      id: t.id,
+      label: t.label,
+      c1: t.light,
+      c2: t.dark,
+      ink: t.id === 'lyn' ? '#141a4d' : '#fff7e0',
+      iconSvg: elementIcon(t.icon),
+    })),
+    shutterLabel: 'Tag kort!',
+    surprise: (_frame, rand, previous) => ({ text: pickPower(rand, previous), strength: pickStrength(rand) }),
+    resultTitle: (n) => `${cardNumberLabel(n)} er klar!`,
+    resultLabel: 'Superkraft:',
+  },
+  forside: {
+    id: 'forside',
+    name: 'Forsiden',
+    width: COVER_W,
+    height: COVER_H,
+    framesHeading: 'Blad',
+    frames: MAGAZINES.map((m) => ({
+      id: m.id,
+      label: m.label,
+      c1: m.band,
+      c2: m.band,
+      ink: m.bandInk,
+      iconSvg: uiIcon(m.icon),
+    })),
+    shutterLabel: 'Tag forsiden!',
+    surprise: (frame, rand, previous) => {
+      const story = pickCoverStory(frame, rand, previous);
+      return { text: story.headline, burst: story.burst, teaser: story.teaser };
+    },
+    resultTitle: () => 'Forsiden er klar!',
+    resultLabel: 'På forsiden:',
+  },
+};
+
+export const THEME_IDS = Object.keys(THEMES) as ThemeId[];
+
+export const isThemeId = (v: unknown): v is ThemeId => typeof v === 'string' && v in THEMES;
+
+/** Pictures saved before themes existed were all trading cards. */
+export const themeOf = (record: { theme?: string }): ThemeId => (isThemeId(record.theme) ? record.theme : 'kort');
+
+const PREF_KEY = 'fotoboksen.theme';
+
+/** The theme picked last time, so the start screen can offer it first. Storage may be missing or throw. */
+export function loadThemePref(storage: Pick<Storage, 'getItem'> | undefined): ThemeId {
+  try {
+    const v = storage?.getItem(PREF_KEY);
+    return isThemeId(v) ? v : 'kort';
+  } catch {
+    return 'kort';
+  }
+}
+
+export function saveThemePref(storage: Pick<Storage, 'setItem'> | undefined, id: ThemeId): void {
+  try {
+    storage?.setItem(PREF_KEY, id);
+  } catch {
+    /* private mode: the choice just isn't remembered */
+  }
+}

@@ -26,3 +26,19 @@ FIRST VIEWPORT: Centre: one upright card (5:7) as tall as the screen allows minu
 FORM: IMPECCABLE'S PICK, candidate 1 of 7 on my ordered list (holo trading card). seed:6dd77bb0f3fe7548. Signature move: holo foil sweep on the live card; on the result and in the gallery the card tilts in 3D and the foil highlight tracks the finger. Motion grammar: the card flip reveal after capture, springy chip selection; nothing else animates.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Direction contract: Forsiden (second theme)
+
+The app opens on a theme picker (Samlekort or Forsiden); the booth, result, gallery and viewer keep one structure and change world per theme. The contract above still governs Samlekort.
+
+THESIS: Your photo is this week's magazine cover: full-bleed photo under a giant masthead, with silly cover lines about you. Refuses the props-and-white-frame party app.
+
+OWN-WORLD: Saturated newsstand cyan ground (#0a8fd0), masthead band colour per magazine (Stjerne red #ff2a3d, Sport green, Gamer purple, Dyreliv orange, Rummet navy), yellow starburst sticker (#ffe600), ink black (#111) strip and outlines, white cover lines with black stroke. Anton for mastheads, cover lines and UI display; Baloo 2 for labels.
+
+STORY: Kid picks a magazine, taps "Tag forsiden!", countdown over the faces, the cover lands with a surprise headline. Adults find covers mixed with cards in Samlingen.
+
+FIRST VIEWPORT: Centre: one 3:4 cover as tall as the screen allows, live camera full bleed under masthead and issue strip. Left "BLAD" five magazine chips, right "EFFEKT" six chips, bottom centre red "TAG FORSIDEN!" pill, bottom right Samling.
+
+FORM: IMPECCABLE'S PICK, candidate 1 of 7 on my ordered list (magazine cover). seed:d4c55e93e0668a64. Signature move: cover lines stay outside the faces zone (coverLayout.faces); the cover lands on the table on reveal; gloss sweeps the masthead only.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

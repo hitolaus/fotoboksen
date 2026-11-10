@@ -1,0 +1,102 @@
+import { describe, expect, it } from 'vitest';
+import { loadThemePref, saveThemePref, themeOf, THEMES, THEME_IDS } from '../src/themes';
+import { MAGAZINES, BURSTS, TEASERS, pickCoverStory, magazine } from '../src/magazine';
+import { coverLayout, intersects, COVER_W, COVER_H } from '../src/geometry';
+import { POWERS } from '../src/powers';
+
+const memory = () => {
+  const m = new Map<string, string>();
+  return { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v) };
+};
+
+describe('themes', () => {
+  it('offers the trading card and the magazine cover', () => {
+    expect(THEME_IDS).toEqual(['kort', 'forside']);
+    expect(THEMES.kort.name).toBe('Samlekort');
+    expect(THEMES.forside.name).toBe('Forsiden');
+  });
+
+  it('gives every theme choices with unique ids for the left picker', () => {
+    for (const id of THEME_IDS) {
+      const ids = THEMES[id].frames.map((f) => f.id);
+      expect(ids.length).toBeGreaterThan(0);
+      expect(new Set(ids).size).toBe(ids.length);
+    }
+  });
+
+  it('reads old gallery pictures without a theme as trading cards', () => {
+    expect(themeOf({})).toBe('kort');
+    expect(themeOf({ theme: 'nonsense' })).toBe('kort');
+    expect(themeOf({ theme: 'forside' })).toBe('forside');
+  });
+
+  it('surprises a card with a superpower and a strength', () => {
+    const s = THEMES.kort.surprise('ild', () => 0.5);
+    expect(POWERS).toContain(s.text);
+    expect(s.strength).toBeGreaterThanOrEqual(100);
+  });
+
+  it('surprises a cover with a headline from the chosen magazine, never the same one twice in a row', () => {
+    const first = THEMES.forside.surprise('gamer', () => 0);
+    expect(magazine('gamer').headlines).toContain(first.text);
+    const next = THEMES.forside.surprise('gamer', () => 0, first.text);
+    expect(next.text).not.toBe(first.text);
+    expect(next.strength).toBeUndefined();
+  });
+});
+
+describe('theme preference', () => {
+  it('remembers the last theme picked', () => {
+    const s = memory();
+    saveThemePref(s, 'forside');
+    expect(loadThemePref(s)).toBe('forside');
+  });
+
+  it('falls back to the trading card when nothing, garbage, or broken storage', () => {
+    expect(loadThemePref(undefined)).toBe('kort');
+    const s = memory();
+    s.setItem('fotoboksen.theme', 'disco');
+    expect(loadThemePref(s)).toBe('kort');
+    const broken = { getItem: () => { throw new Error('denied'); }, setItem: () => { throw new Error('denied'); } };
+    expect(loadThemePref(broken)).toBe('kort');
+    expect(() => saveThemePref(broken, 'forside')).not.toThrow();
+  });
+});
+
+describe('magazine cover stories', () => {
+  it('draws headline, burst and teaser from their lists', () => {
+    for (const m of MAGAZINES) {
+      const story = pickCoverStory(m.id, () => 0.99);
+      expect(m.headlines).toContain(story.headline);
+      expect(BURSTS).toContain(story.burst);
+      expect(TEASERS).toContain(story.teaser);
+    }
+  });
+
+  it('every magazine has a few headlines to vary between shots', () => {
+    for (const m of MAGAZINES) expect(m.headlines.length).toBeGreaterThanOrEqual(3);
+  });
+});
+
+describe('cover layout', () => {
+  it('is a 3:4 magazine page', () => {
+    expect(COVER_W / COVER_H).toBeCloseTo(3 / 4, 6);
+  });
+
+  it('keeps every cover line and sticker out of the faces in the middle of the photo', () => {
+    const L = coverLayout();
+    for (const k of ['masthead', 'issue', 'teaser', 'burst', 'headline', 'barcode'] as const) {
+      expect(intersects(L[k], L.faces), k).toBe(false);
+    }
+  });
+
+  it('keeps everything on the page', () => {
+    const L = coverLayout();
+    for (const r of Object.values(L)) {
+      expect(r.x).toBeGreaterThanOrEqual(0);
+      expect(r.y).toBeGreaterThanOrEqual(0);
+      expect(r.x + r.w).toBeLessThanOrEqual(COVER_W);
+      expect(r.y + r.h).toBeLessThanOrEqual(COVER_H);
+    }
+  });
+});

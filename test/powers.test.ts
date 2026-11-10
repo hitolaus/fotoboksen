@@ -44,3 +44,10 @@ describe('labels', () => {
     expect(dateLabel(new Date(2026, 10, 9))).toBe('09.11.2026');
   });
 });
+
+describe('pickFresh', () => {
+  it('still answers when the pool only holds the previous entry', async () => {
+    const { pickFresh } = await import('../src/powers');
+    expect(pickFresh(['a'], () => 0.5, 'a')).toBe('a');
+  });
+});

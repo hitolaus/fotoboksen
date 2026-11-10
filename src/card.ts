@@ -1,5 +1,5 @@
 import { CARD_BADGE, CARD_TITLE } from './config';
-import { cardLayout, coverCrop, type CardLayout, type Rect, CARD_W, CARD_H } from './geometry';
+import { coverCrop, type CardLayout, type Rect } from './geometry';
 import { applyPixelEffect, pixelBlock, type EffectId } from './effects';
 import type { CardType } from './cardTypes';
 import { ELEMENT_PATHS, type ElementIcon } from './icons';
@@ -202,7 +202,16 @@ export class ArtPainter {
   private sctx = this.scratch.getContext('2d', { willReadFrequently: true })!;
   private smallCtx = this.small.getContext('2d')!;
 
-  paint(ctx: CanvasRenderingContext2D, src: CanvasImageSource, srcW: number, srcH: number, art: Rect, effect: EffectId, t: number) {
+  paint(
+    ctx: CanvasRenderingContext2D,
+    src: CanvasImageSource,
+    srcW: number,
+    srcH: number,
+    art: Rect,
+    radius: number,
+    effect: EffectId,
+    t: number,
+  ) {
     const w = Math.round(art.w);
     const h = Math.round(art.h);
     if (this.scratch.width !== w || this.scratch.height !== h) {
@@ -247,33 +256,9 @@ export class ArtPainter {
     }
 
     ctx.save();
-    rr(ctx, art, 10 * (art.w / 824));
+    rr(ctx, art, radius);
     ctx.clip();
     ctx.drawImage(this.scratch, art.x, art.y, art.w, art.h);
     ctx.restore();
   }
-}
-
-/** Renders the finished card at full size and returns it as a JPEG. */
-export async function renderFinalCard(
-  src: CanvasImageSource,
-  srcW: number,
-  srcH: number,
-  effect: EffectId,
-  t: number,
-  info: CardInfo,
-): Promise<Blob> {
-  const canvas = document.createElement('canvas');
-  canvas.width = CARD_W;
-  canvas.height = CARD_H;
-  const ctx = canvas.getContext('2d')!;
-  // JPEG has no transparency: the corners outside the rounded card print as white
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, CARD_W, CARD_H);
-  const L = cardLayout(1);
-  drawChrome(ctx, L, 1, info);
-  new ArtPainter().paint(ctx, src, srcW, srcH, L.art, effect, t);
-  return new Promise((resolve, reject) =>
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('Kunne ikke gemme billedet'))), 'image/jpeg', 0.92),
-  );
 }

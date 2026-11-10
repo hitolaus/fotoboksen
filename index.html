@@ -15,23 +15,31 @@
   </head>
   <body data-screen="start">
     <main>
-      <section id="start" class="screen" aria-label="Start">
-        <button id="start-btn" class="card-back start-card" type="button">
-          <span class="card-back-title">Fotoboksen</span>
-          <span class="card-back-sub">Tryk for at starte</span>
-        </button>
+      <section id="start" class="screen" aria-label="Vælg tema">
+        <h1 class="start-title">Fotoboksen</h1>
+        <div class="theme-picks" role="group" aria-label="Tema">
+          <button class="theme-pick" type="button" data-theme-pick="kort">
+            <span class="card-back theme-art"><span class="card-back-title">Samlekort</span></span>
+            <span class="theme-name">Samlekort</span>
+          </button>
+          <button class="theme-pick" type="button" data-theme-pick="forside">
+            <canvas id="cover-tile" class="cover-tile theme-art" aria-hidden="true"></canvas>
+            <span class="theme-name">Forsiden</span>
+          </button>
+        </div>
+        <p class="start-hint">Tryk på et tema for at starte</p>
         <p id="start-error" class="start-error" role="alert" hidden></p>
       </section>
 
       <section id="booth" class="screen" aria-label="Tag et kort">
         <div class="picker picker-types">
-          <h2>Korttype</h2>
-          <div id="types" class="chips" role="group" aria-label="Korttype"></div>
+          <h2 id="types-heading">Korttype</h2>
+          <div id="types" class="chips" role="group" aria-labelledby="types-heading"></div>
         </div>
 
         <div class="stage">
           <div class="live-card">
-            <canvas id="preview" aria-label="Kameraet som kort"></canvas>
+            <canvas id="preview" aria-label="Kameraet"></canvas>
             <div class="sheen" aria-hidden="true"></div>
             <div id="countdown" class="countdown" hidden aria-live="assertive">
               <svg class="budget" viewBox="0 0 100 100" aria-hidden="true">
@@ -50,7 +58,7 @@
         </div>
 
         <div class="shutter-row">
-          <button id="shutter" class="shutter" type="button"><span id="shutter-icon"></span>Tag kort!</button>
+          <button id="shutter" class="shutter" type="button"><span id="shutter-icon"></span><span id="shutter-label">Tag kort!</span></button>
         </div>
         <button id="open-gallery" class="pill pill-quiet gallery-btn" type="button" aria-label="Samling"></button>
       </section>
@@ -61,7 +69,7 @@
         </div>
         <div class="result-side">
           <h1 id="result-title">Nr. 001 er klar!</h1>
-          <p class="result-power">Superkraft: <span id="result-power"></span></p>
+          <p class="result-power"><span id="result-label">Superkraft:</span> <span id="result-power" class="result-value"></span></p>
           <div class="result-actions">
             <button id="again" class="shutter shutter-small" type="button"></button>
             <button id="result-print" class="pill" type="button"></button>
@@ -74,7 +82,10 @@
         <header class="gallery-head">
           <button id="gallery-back" class="pill pill-quiet" type="button"></button>
           <h1>Samlingen <span id="gallery-count" class="gallery-count"></span></h1>
-          <button id="share-all" class="pill pill-quiet" type="button"></button>
+          <div class="gallery-tools">
+            <button id="change-theme" class="pill pill-quiet" type="button"></button>
+            <button id="share-all" class="pill pill-quiet" type="button"></button>
+          </div>
         </header>
         <div id="binder" class="binder"></div>
         <div id="gallery-empty" class="gallery-empty" hidden>

@@ -17,10 +17,16 @@ export const POWERS = [
 
 export type Rand = () => number;
 
+/** A random entry from `pool`, never `previous` again (so the same text never comes twice in a row). */
+export function pickFresh<T>(pool: readonly T[], rand: Rand, previous?: T): T {
+  const fresh = pool.filter((p) => p !== previous);
+  const from = fresh.length ? fresh : pool;
+  return from[Math.min(from.length - 1, Math.floor(rand() * from.length))];
+}
+
 /** A random superpower, never the same one twice in a row. */
 export function pickPower(rand: Rand, previous?: string): string {
-  const pool = POWERS.filter((p) => p !== previous);
-  return pool[Math.min(pool.length - 1, Math.floor(rand() * pool.length))];
+  return pickFresh(POWERS, rand, previous);
 }
 
 /** Strength from 100 to 999 inclusive. */

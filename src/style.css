@@ -144,18 +144,82 @@ body[data-screen='gallery'] #gallery {
 /* ---------- start ---------- */
 
 #start {
-  place-content: center;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
   justify-items: center;
-  gap: 24px;
+  align-items: center;
+  gap: clamp(12px, 2.4dvh, 28px);
 }
 
-.start-card {
-  height: min(78dvh, 120vw);
+.start-title {
+  font-size: clamp(44px, 7dvh, 72px);
+  color: var(--gold);
+  text-shadow: 0 4px 16px rgb(0 0 0 / 0.45);
+}
+
+.theme-picks {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: clamp(24px, 5vw, 72px);
+}
+
+.theme-pick {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  justify-items: center;
+  gap: 16px;
+  min-height: 0;
   transition: transform 0.15s;
 }
 
-.start-card:active {
+.theme-pick:active {
   transform: scale(0.97);
+}
+
+.theme-art {
+  height: 100%;
+  min-height: 0;
+}
+
+.theme-name {
+  font-family: var(--display);
+  font-size: clamp(28px, 4dvh, 40px);
+  padding: 6px 28px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.1);
+}
+
+[data-theme-pick='kort'] .theme-name {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+[data-theme-pick='forside'] .theme-name {
+  background: #ff2a3d;
+  color: #ffffff;
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+}
+
+/* the theme used last time gets a ring, the other stays just as live */
+.theme-pick.last .theme-art {
+  outline: 5px solid var(--cream);
+  outline-offset: 8px;
+}
+
+.cover-tile {
+  display: block;
+  height: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 0.6%;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.45);
+}
+
+.start-hint {
+  font-weight: 800;
+  font-size: clamp(20px, 2.6dvh, 26px);
 }
 
 .start-error {
@@ -277,7 +341,7 @@ body[data-screen='gallery'] #gallery {
 .live-card {
   position: relative;
   height: 100%;
-  aspect-ratio: 5 / 7;
+  aspect-ratio: var(--ratio, 5 / 7);
   border-radius: 5.2% / 3.7%;
   overflow: hidden;
   box-shadow: 0 24px 60px rgb(0 0 0 / 0.5);
@@ -531,7 +595,7 @@ body[data-counting] .shutter-row {
   --mx: 30%;
   --my: 25%;
   height: 100%;
-  aspect-ratio: 5 / 7;
+  aspect-ratio: var(--ratio, 5 / 7);
   perspective: 1400px;
   touch-action: none;
 }
@@ -658,7 +722,7 @@ body[data-counting] .shutter-row {
   color: var(--cream);
 }
 
-.result-power span {
+.result-value {
   display: inline-block;
   color: var(--gold);
 }
@@ -709,8 +773,10 @@ body[data-counting] .shutter-row {
   font-variant-numeric: tabular-nums;
 }
 
-#share-all {
+.gallery-tools {
   justify-self: end;
+  display: flex;
+  gap: 12px;
 }
 
 #gallery-back {
@@ -730,7 +796,7 @@ body[data-counting] .shutter-row {
 }
 
 .pocket {
-  aspect-ratio: 5 / 7;
+  aspect-ratio: var(--ratio, 5 / 7);
   border-radius: 5.8% / 4.1%;
   overflow: hidden;
   background: transparent;
@@ -839,6 +905,147 @@ body[data-counting] .shutter-row {
 
 .print-sheet {
   display: none;
+}
+
+/* ---------- Forsiden: the magazine cover theme ---------- */
+
+body[data-theme='forside'] {
+  --mag-ground: #0a8fd0;
+  --mag-red: #ff2a3d;
+  --mag-yellow: #ffe600;
+  --mag-ink: #111111;
+  background: radial-gradient(120% 90% at 50% 30%, #1aa6e6, var(--mag-ground) 70%);
+  background-color: var(--mag-ground);
+  color: #ffffff;
+}
+
+body[data-theme='forside'] h1,
+body[data-theme='forside'] h2,
+body[data-theme='forside'] .shutter,
+body[data-theme='forside'] .countdown-num,
+body[data-theme='forside'] .countdown-hint,
+body[data-theme='forside'] button:focus-visible {
+  outline-color: var(--mag-ink);
+}
+
+body[data-theme='forside'] .result-power {
+  font-family: 'Anton', sans-serif;
+  letter-spacing: 0.01em;
+}
+
+body[data-theme='forside'] .picker h2,
+body[data-theme='forside'] .result-side h1,
+body[data-theme='forside'] .gallery-head h1 {
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+body[data-theme='forside'] .chip {
+  background: rgb(0 40 80 / 0.22);
+}
+
+body[data-theme='forside'] .result-power {
+  color: #ffffff;
+}
+
+body[data-theme='forside'] .result-value {
+  background: var(--mag-yellow);
+  color: var(--mag-ink);
+  padding: 0.04em 0.3em;
+  margin-top: 0.2em;
+}
+
+body[data-theme='forside'] .chip[aria-pressed='true'],
+body[data-theme='forside'] .pill:not(.pill-quiet):not(.pill-danger),
+body[data-theme='forside'] .gallery-btn .count {
+  background: var(--mag-yellow);
+  color: var(--mag-ink);
+}
+
+body[data-theme='forside'] .pill-quiet {
+  background: rgb(0 40 80 / 0.25);
+}
+
+body[data-theme='forside'] .chip-effect .chip-disc {
+  background: rgb(255 255 255 / 0.16);
+}
+
+body[data-theme='forside'] .chip-effect[aria-pressed='true'] .chip-disc {
+  background: var(--mag-ink);
+  color: var(--mag-yellow);
+}
+
+body[data-theme='forside'] .shutter {
+  background: var(--mag-red);
+  color: #ffffff;
+  text-transform: uppercase;
+  box-shadow:
+    0 0 0 6px #ffffff,
+    0 16px 36px 4px rgb(0 30 70 / 0.4);
+}
+
+body[data-theme='forside'] .live-card,
+.tilt[data-theme='forside'] .face,
+.pocket[data-theme='forside'] {
+  border-radius: 0.6%;
+}
+
+/* gloss sweeps the masthead band only, never the faces */
+body[data-theme='forside'] .sheen {
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.6) 48%, transparent 62%);
+  background-size: 220% 100%;
+  -webkit-mask: linear-gradient(#000 0 0) 0 0 / 100% 16.6% no-repeat;
+  mask: linear-gradient(#000 0 0) 0 0 / 100% 16.6% no-repeat;
+}
+
+/* countdown in the middle of the cover, between the teaser and the headline */
+body[data-theme='forside'] .countdown {
+  inset: 24% 14% 26% 14%;
+}
+
+body[data-theme='forside'] .countdown-num {
+  color: var(--mag-yellow);
+  -webkit-text-stroke-color: var(--mag-ink);
+}
+
+body[data-theme='forside'] .budget .budget-fill {
+  stroke: var(--mag-yellow);
+}
+
+body[data-theme='forside'] .countdown-hint {
+  top: auto;
+  left: auto;
+  bottom: -8%;
+  color: #ffffff;
+  -webkit-text-stroke-color: var(--mag-ink);
+  text-transform: uppercase;
+}
+
+/* the cover lands on the table like a new issue instead of flipping like a card */
+.tilt[data-theme='forside'] .flipper.reveal {
+  animation-name: land;
+}
+
+@keyframes land {
+  0% {
+    transform: translateY(-30%) rotate(-7deg) scale(1.08);
+    opacity: 0;
+  }
+  45% {
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.tilt[data-theme='forside'] .face-back {
+  display: none;
+}
+
+.tilt[data-theme='forside'] .foil {
+  background: radial-gradient(circle at var(--mx) var(--my), rgb(255 255 255 / 0.55), transparent 40%);
+  mix-blend-mode: soft-light;
 }
 
 /* ---------- portrait iPad ---------- */

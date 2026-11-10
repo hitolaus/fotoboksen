@@ -1,13 +1,18 @@
 import type { EffectId } from './effects';
-import type { CardTypeId } from './cardTypes';
+import type { ThemeId } from './themes';
 
 export interface CardRecord {
   number: number;
   createdAt: number;
-  type: CardTypeId;
+  /** missing on pictures saved before themes existed; read it with themeOf() */
+  theme?: ThemeId;
+  /** card type or magazine id */
+  type: string;
   effect: EffectId;
+  /** the surprise line: the card's superpower or the cover headline */
   power: string;
-  strength: number;
+  /** card strength; covers have none */
+  strength?: number;
   image: Blob;
 }
 
