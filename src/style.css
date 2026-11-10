@@ -1109,6 +1109,20 @@ body[data-counting] .shutter-row {
   line-height: 1.25;
 }
 
+.print-ready {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  font-size: 22px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.print-ready[hidden],
+.print-sizes[hidden] {
+  display: none;
+}
+
 .print-size-sum {
   font-size: 15px;
   font-weight: 800;

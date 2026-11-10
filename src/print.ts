@@ -58,3 +58,41 @@ export function printSummary(count: number, size: PrintSize): string {
   const sheets = sheetsFor(count, size).length;
   return `${count} ${count === 1 ? 'billede' : 'billeder'} · ${sheets} ark`;
 }
+
+export interface Placed {
+  /** which picture, as an index into the list given */
+  index: number;
+  /** position and size on the A4 page, in millimetres */
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * The same grid the print stylesheet lays out, worked out in millimetres for drawing a whole
+ * A4 sheet as one image. The grid is centred on the page and each picture is centred in its box.
+ */
+export function sheetLayout(ratios: number[], size: PrintSize): Placed[][] {
+  const { cols, rows } = gridFor(size);
+  return sheetsFor(ratios.length, size).map((sheet) => {
+    const usedRows = Math.min(rows, Math.ceil(sheet.length / cols));
+    const usedCols = Math.min(cols, sheet.length);
+    const gridW = usedCols * size.box.w + (usedCols - 1) * GAP;
+    const gridH = usedRows * size.box.h + (usedRows - 1) * GAP;
+    const x0 = (A4.w - gridW) / 2;
+    const y0 = (A4.h - gridH) / 2;
+    return sheet.map((index, k) => {
+      const col = k % cols;
+      const row = Math.floor(k / cols);
+      const fit = fitInBox(ratios[index], size.box);
+      return {
+        index,
+        x: x0 + col * (size.box.w + GAP) + (size.box.w - fit.w) / 2,
+        y: y0 + row * (size.box.h + GAP) + (size.box.h - fit.h) / 2,
+        w: fit.w,
+        h: fit.h,
+      };
+    });
+  });
+}

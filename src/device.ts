@@ -1,4 +1,4 @@
-import { fitInBox, gridFor, PAD, PAGE, sheetsFor, type PrintSize } from './print';
+import { A4, fitInBox, gridFor, PAD, PAGE, sheetLayout, sheetsFor, type PrintSize } from './print';
 
 /** Browser plumbing: camera, sound, screen wake lock, print and share. */
 
@@ -91,7 +91,52 @@ export interface PrintItem {
   ratio: number;
 }
 
-/** Lays the pictures out on A4 sheets at the chosen size (in millimetres) and opens the print dialog. */
+/** Running as an app from the Home Screen, where Safari's print dialog is not available. */
+export const isHomeScreenApp = (): boolean =>
+  (navigator as { standalone?: boolean }).standalone === true ||
+  matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches;
+
+/** A4 at 150 dpi: sharp enough for photo prints, small enough to share quickly. */
+const PX_PER_MM = 150 / 25.4;
+
+async function loadImage(url: string): Promise<HTMLImageElement> {
+  const img = new Image();
+  img.src = url;
+  await img.decode();
+  return img;
+}
+
+/**
+ * Draws each A4 sheet as one picture, for printing through the share sheet's Print option.
+ * Used in the Home Screen app, where window.print() does nothing. A picture printed this way
+ * never gets a browser header or footer either.
+ */
+export async function sheetImages(items: PrintItem[], size: PrintSize): Promise<File[]> {
+  const images = await Promise.all(items.map((i) => loadImage(i.url)));
+  const sheets = sheetLayout(
+    items.map((i) => i.ratio),
+    size,
+  );
+  const files: File[] = [];
+  for (const [n, sheet] of sheets.entries()) {
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(A4.w * PX_PER_MM);
+    canvas.height = Math.round(A4.h * PX_PER_MM);
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    for (const p of sheet) {
+      ctx.drawImage(images[p.index], p.x * PX_PER_MM, p.y * PX_PER_MM, p.w * PX_PER_MM, p.h * PX_PER_MM);
+    }
+    const blob = await new Promise<Blob>((resolve, reject) =>
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('Arket kunne ikke laves'))), 'image/jpeg', 0.92),
+    );
+    files.push(new File([blob], `fotoboksen-print-${n + 1}.jpg`, { type: 'image/jpeg' }));
+  }
+  return files;
+}
+
+/** Lays the pictures out on A4 sheets at the chosen size (in millimetres) and prints them. */
 export async function printPictures(items: PrintItem[], size: PrintSize): Promise<void> {
   const host = document.getElementById('print-sheet')!;
   const { cols } = gridFor(size);

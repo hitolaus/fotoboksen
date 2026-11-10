@@ -23,7 +23,9 @@ import {
   CameraError,
   cardFile,
   keepAwake,
+  isHomeScreenApp,
   printPictures,
+  sheetImages,
   type PrintItem,
   shareFiles,
   shutterSound,
@@ -430,6 +432,10 @@ function sheetPreview(id: PrintSizeId): string {
 function askPrint(items: PrintItem[]) {
   pendingPrint = items;
   $('print-count').textContent = items.length === 1 ? '1 billede' : `${items.length} billeder`;
+  $('print-title').textContent = 'Hvor stort skal det printes?';
+  $('print-sizes').hidden = false;
+  $('print-ready').hidden = true;
+  readySheets = [];
   $('print-sizes').innerHTML = PRINT_SIZES.map(
     (s) => `<button class="print-size" type="button" data-size="${s.id}">
       ${sheetPreview(s.id)}
@@ -444,8 +450,36 @@ function askPrint(items: PrintItem[]) {
 $('print-sizes').addEventListener('click', (e) => {
   const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-size]');
   if (!btn) return;
+  const size = printSize(btn.dataset.size as PrintSizeId);
+  if (!isHomeScreenApp()) {
+    printDialog.close();
+    void printPictures(pendingPrint, size);
+    return;
+  }
+  // The Home Screen app has no print dialog of its own: the sheets become pictures, printed from
+  // the share sheet. Opening that needs a fresh tap, so the sheets are made first and a button
+  // opens it.
+  $('print-title').textContent = 'Klar til print';
+  $('print-sizes').hidden = true;
+  $('print-ready').hidden = false;
+  $('print-ready-text').textContent = 'Gør arkene klar …';
+  $<HTMLButtonElement>('print-share').disabled = true;
+  sheetImages(pendingPrint, size)
+    .then((files) => {
+      readySheets = files;
+      $('print-ready-text').textContent = `${files.length === 1 ? '1 ark er klar' : `${files.length} ark er klar`}. Tryk og vælg Udskriv.`;
+      $<HTMLButtonElement>('print-share').disabled = false;
+    })
+    .catch(() => {
+      printDialog.close();
+      toast('Arkene kunne ikke laves. Prøv igen.');
+    });
+});
+
+let readySheets: File[] = [];
+$('print-share').addEventListener('click', () => {
   printDialog.close();
-  void printPictures(pendingPrint, printSize(btn.dataset.size as PrintSizeId));
+  shareFiles(readySheets).catch(() => toast('Udskriften kunne ikke åbnes.'));
 });
 $('print-cancel').addEventListener('click', () => printDialog.close());
 printDialog.addEventListener('click', (e) => e.target === printDialog && printDialog.close());
@@ -523,6 +557,7 @@ async function boot() {
   $('share-all').innerHTML = `${uiIcon('share')}<span>Del alle</span>`;
   $('select-start').innerHTML = `${uiIcon('select')}<span>Vælg</span>`;
   $('select-cancel').innerHTML = `${uiIcon('close')}<span>Annuller</span>`;
+  $('print-share').innerHTML = `${uiIcon('print')}<span>Print</span>`;
   $('viewer-print').innerHTML = `${uiIcon('print')}<span>Print</span>`;
   $('viewer-share').innerHTML = `${uiIcon('share')}<span>Del</span>`;
   $('viewer-close').innerHTML = `${uiIcon('close')}<span>Luk</span>`;

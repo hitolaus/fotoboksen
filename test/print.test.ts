@@ -72,3 +72,42 @@ describe('grid on A4', () => {
     expect(printSummary(5, printSize('mellem'))).toBe('5 billeder · 2 ark');
   });
 });
+
+describe('sheet image layout (printing from the Home Screen app)', () => {
+  it('places every picture on its sheet, in order, each fitted in its box and keeping its shape', async () => {
+    const { sheetLayout, A4 } = await import('../src/print');
+    const ratios = [CARD, PRINT, CARD, CARD, PRINT];
+    const sheets = sheetLayout(ratios, printSize('mellem'));
+    expect(sheets.map((s) => s.map((p) => p.index))).toEqual([[0, 1, 2, 3], [4]]);
+    for (const sheet of sheets) {
+      for (const p of sheet) {
+        expect(p.w / p.h).toBeCloseTo(ratios[p.index], 6);
+        expect(p.w).toBeLessThanOrEqual(printSize('mellem').box.w + 1e-9);
+        expect(p.x).toBeGreaterThanOrEqual(0);
+        expect(p.y).toBeGreaterThanOrEqual(0);
+        expect(p.x + p.w).toBeLessThanOrEqual(A4.w);
+        expect(p.y + p.h).toBeLessThanOrEqual(A4.h);
+      }
+    }
+  });
+
+  it('never lets two pictures on a sheet overlap', async () => {
+    const { sheetLayout } = await import('../src/print');
+    const sheet = sheetLayout(Array(9).fill(CARD), printSize('lille'))[0];
+    expect(sheet).toHaveLength(9);
+    for (let i = 0; i < sheet.length; i++)
+      for (let j = i + 1; j < sheet.length; j++) {
+        const a = sheet[i];
+        const b = sheet[j];
+        const overlap = a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+        expect(overlap).toBe(false);
+      }
+  });
+
+  it('centres a single large picture on the page', async () => {
+    const { sheetLayout, A4 } = await import('../src/print');
+    const [p] = sheetLayout([PRINT], printSize('stor'))[0];
+    expect(p.x + p.w / 2).toBeCloseTo(A4.w / 2, 6);
+    expect(p.y + p.h / 2).toBeCloseTo(A4.h / 2, 6);
+  });
+});
