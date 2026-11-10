@@ -24,7 +24,7 @@ Or from the terminal: `npx wrangler pages deploy dist`.
 
 ## Party setup on the iPad
 
-1. Open the site in Safari, tap Share › **Add to Home Screen**, and open it from the Home Screen icon (full screen, no Safari bars).
+1. Open the site in Safari, tap Share › **Add to Home Screen**, and open it from the Home Screen icon (no Safari bars; the time and battery sit on a solid black bar at the top). If you change the status bar or manifest settings later, remove the icon and add it again: iPadOS only reads them when the app is added.
 2. Tap the card to start and allow the camera.
 3. Lock the iPad into the app: Settings › Accessibility › **Guided Access** on, then triple-click the top button inside the app. This also blocks the home gesture.
 4. Plug in the charger. The app asks the screen to stay on; if the iPad dims anyway, set Settings › Display & Brightness › Auto-Lock to Never.
