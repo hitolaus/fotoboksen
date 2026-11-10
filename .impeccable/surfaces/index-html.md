@@ -60,3 +60,23 @@ FIRST VIEWPORT: Centre: one 3:4 purikura print, live photo in a rounded white-ri
 FORM: the direction was pinned by the user's brief, so no concept roll ran and there is no seed. Signature move: stickers never cover faces (purikuraLayout.faces, side stickers reach at most 60px into the photo); the print pops in with a tilt; sparkle glints run over the frame only.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Start screen tiles
+
+Every offered theme's tile is the Samlekort sunburst card back in that theme's colours. The user's words (2026-11-10, about the Kawaii tile): "I don't like the people on the Kawaii theme on the theme selector. Use the same "star" style as with the card theme, but use other colors". Blokland follows the same rule.
+
+## Direction contract: Blokland (fourth theme)
+
+User asked for a "Minecraft theme". We do not recreate that game (no name, logo, characters, textures or its on-screen look); the user agreed to an original blocky pixel-game world called Blokland, with a "LEVEL UP!" banner awarding a random title.
+
+THESIS: Your photo becomes a level in a block world: framed by pixel blocks, with pixel loot on the edges and a LEVEL UP! banner naming your new title. Refuses a costume of any real game.
+
+OWN-WORLD: Dark stone ground with a faint pixel checker (#26262f/#2b2b35); grass green shutter (#2f8f1f with a lighter top bevel); gold (#ffd23f) for chosen chips, headings and LEVEL UP!; ink #1b1b22 outlines and one-step hard pixel shadows. Square corners with inset bevels. Pixelify Sans 700 everywhere. Worlds: Græs, Grotte, Ørken, Sne, Lava, Hav, each a three-tone block texture.
+
+STORY: Kid picks a world, taps "Tag billede!", countdown, the print drops in step by step and the banner says LEVEL UP! with a title like "Mester-bygger".
+
+FIRST VIEWPORT: Centre: one 3:4 print, photo window on the 70-unit block grid, items on the corners and side edges, banner across the top of the photo, stone title band below. Left "Verden" six chips, right "Effekt" six, green "Tag billede!" block button, Skift tema bottom left, Samling bottom right.
+
+FORM: the direction was set by the user's request and the two answers above, so no concept roll ran and there is no seed. Signature move: items and banner never cover faces (blokLayout.faces, side items reach at most 60px into the photo, tested); the reveal drops in ten hard steps.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

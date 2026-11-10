@@ -1,18 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { loadThemePref, saveThemePref, themeOf, THEMES, THEME_IDS, visibleThemes } from '../src/themes';
+import { themeOf, THEMES, THEME_IDS, visibleThemes } from '../src/themes';
 import { PHRASES } from '../src/kawaii';
 import { MAGAZINES, BURSTS, TEASERS, pickCoverStory, magazine } from '../src/magazine';
 import { coverLayout, intersects, COVER_W, COVER_H } from '../src/geometry';
 import { POWERS } from '../src/powers';
 
-const memory = () => {
-  const m = new Map<string, string>();
-  return { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v) };
-};
-
 describe('themes', () => {
-  it('offers Samlekort and Kawaii on the start screen, and keeps Forsiden hidden but working', () => {
-    expect(visibleThemes().map((t) => t.id)).toEqual(['kort', 'kawaii']);
+  it('offers Samlekort, Kawaii and Blokland on the start screen, and keeps Forsiden hidden but working', () => {
+    expect(visibleThemes().map((t) => t.id)).toEqual(['kort', 'kawaii', 'blokland']);
     expect(THEME_IDS).toContain('forside');
     expect(THEMES.forside.hidden).toBe(true);
   });
@@ -53,30 +48,6 @@ describe('themes', () => {
     const next = THEMES.forside.surprise('gamer', () => 0, first.text);
     expect(next.text).not.toBe(first.text);
     expect(next.strength).toBeUndefined();
-  });
-});
-
-describe('theme preference', () => {
-  it('remembers the last theme picked', () => {
-    const s = memory();
-    saveThemePref(s, 'kawaii');
-    expect(loadThemePref(s)).toBe('kawaii');
-  });
-
-  it('does not offer a hidden theme as the last one used', () => {
-    const s = memory();
-    saveThemePref(s, 'forside');
-    expect(loadThemePref(s)).toBe('kort');
-  });
-
-  it('falls back to the trading card when nothing, garbage, or broken storage', () => {
-    expect(loadThemePref(undefined)).toBe('kort');
-    const s = memory();
-    s.setItem('fotoboksen.theme', 'disco');
-    expect(loadThemePref(s)).toBe('kort');
-    const broken = { getItem: () => { throw new Error('denied'); }, setItem: () => { throw new Error('denied'); } };
-    expect(loadThemePref(broken)).toBe('kort');
-    expect(() => saveThemePref(broken, 'forside')).not.toThrow();
   });
 });
 

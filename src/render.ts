@@ -2,8 +2,9 @@ import { ArtPainter, drawChrome, loadCardFonts } from './card';
 import { cardType } from './cardTypes';
 import { drawCoverOverlay, drawSampleScene, loadCoverFonts } from './cover';
 import { drawPurikuraOver, drawPurikuraUnder, loadPurikuraFonts } from './purikura';
+import { drawBlokOver, drawBlokUnder, loadBlokFonts } from './blokrender';
 import type { EffectId } from './effects';
-import { cardLayout, coverLayout, purikuraLayout, type Rect } from './geometry';
+import { blokLayout, cardLayout, coverLayout, purikuraLayout, type Rect } from './geometry';
 import { THEMES, type Surprise, type ThemeId } from './themes';
 
 export interface RenderInfo {
@@ -45,6 +46,12 @@ export const PAINTERS: Record<ThemeId, Painter> = {
     under: (ctx, s, frameId, info) => drawPurikuraUnder(ctx, s, frameId, info),
     over: (ctx, s, frameId, info) => drawPurikuraOver(ctx, s, frameId, info),
   },
+  blokland: {
+    art: (s) => blokLayout(s).photo,
+    artRadius: () => 0,
+    under: (ctx, s, frameId, info) => drawBlokUnder(ctx, s, frameId, info),
+    over: (ctx, s, frameId, info) => drawBlokOver(ctx, s, frameId, info),
+  },
 };
 
 /** Sample surprises for the start screen tiles, so each tile looks like a finished picture. */
@@ -73,7 +80,7 @@ export function drawThemeTile(canvas: HTMLCanvasElement, theme: ThemeId, scale: 
 }
 
 export async function loadFonts(): Promise<void> {
-  await Promise.all([loadCardFonts(), loadCoverFonts(), loadPurikuraFonts()]);
+  await Promise.all([loadCardFonts(), loadCoverFonts(), loadPurikuraFonts(), loadBlokFonts()]);
 }
 
 /** Renders the finished picture at full size and returns it as a JPEG. */

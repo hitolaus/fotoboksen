@@ -1,11 +1,12 @@
 import { CARD_TYPES } from './cardTypes';
 import { MAGAZINES, pickCoverStory } from './magazine';
 import { STICKER_SETS, pickPhrase, shapeSvg } from './kawaii';
+import { WORLDS, blockSvg, pickTitle } from './blokland';
 import { cardNumberLabel, pickPower, pickStrength, type Rand } from './powers';
-import { CARD_H, CARD_W, COVER_H, COVER_W, PURI_H, PURI_W } from './geometry';
+import { BLOK_H, BLOK_W, CARD_H, CARD_W, COVER_H, COVER_W, PURI_H, PURI_W } from './geometry';
 import { elementIcon, uiIcon } from './icons';
 
-export type ThemeId = 'kort' | 'forside' | 'kawaii';
+export type ThemeId = 'kort' | 'forside' | 'kawaii' | 'blokland';
 
 /** One choice in the left picker: a card type or a magazine. */
 export interface FrameOption {
@@ -58,7 +59,7 @@ export const THEMES: Record<ThemeId, Theme> = {
       ink: t.id === 'lyn' ? '#141a4d' : '#fff7e0',
       iconSvg: elementIcon(t.icon),
     })),
-    shutterLabel: 'Tag kort!',
+    shutterLabel: 'Tag billede!',
     surprise: (_frame, rand, previous) => ({ text: pickPower(rand, previous), strength: pickStrength(rand) }),
     resultTitle: (n) => `${cardNumberLabel(n)} er klar!`,
     resultLabel: 'Superkraft:',
@@ -106,6 +107,26 @@ export const THEMES: Record<ThemeId, Theme> = {
     // the print's own bubble already shows the phrase
     resultLabel: '',
   },
+  blokland: {
+    id: 'blokland',
+    name: 'Blokland',
+    width: BLOK_W,
+    height: BLOK_H,
+    framesHeading: 'Verden',
+    frames: WORLDS.map((w) => ({
+      id: w.id,
+      label: w.label,
+      c1: w.block[1],
+      c2: w.block[2],
+      ink: '#1b1b22',
+      iconSvg: blockSvg(w),
+    })),
+    shutterLabel: 'Tag billede!',
+    surprise: (_frame, rand, previous) => ({ text: pickTitle(rand, previous) }),
+    resultTitle: () => 'Level up!',
+    // the banner on the print already shows the new title
+    resultLabel: '',
+  },
 };
 
 export const THEME_IDS = Object.keys(THEMES) as ThemeId[];
@@ -117,23 +138,3 @@ export const isThemeId = (v: unknown): v is ThemeId => typeof v === 'string' && 
 
 /** Pictures saved before themes existed were all trading cards. */
 export const themeOf = (record: { theme?: string }): ThemeId => (isThemeId(record.theme) ? record.theme : 'kort');
-
-const PREF_KEY = 'fotoboksen.theme';
-
-/** The theme picked last time, if the start screen still offers it. Storage may be missing or throw. */
-export function loadThemePref(storage: Pick<Storage, 'getItem'> | undefined): ThemeId {
-  try {
-    const v = storage?.getItem(PREF_KEY);
-    return isThemeId(v) && !THEMES[v].hidden ? v : 'kort';
-  } catch {
-    return 'kort';
-  }
-}
-
-export function saveThemePref(storage: Pick<Storage, 'setItem'> | undefined, id: ThemeId): void {
-  try {
-    storage?.setItem(PREF_KEY, id);
-  } catch {
-    /* private mode: the choice just isn't remembered */
-  }
-}

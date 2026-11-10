@@ -1,6 +1,6 @@
 # Fotoboksen
 
-A self-service photobooth for a 9th birthday party, running on an iPad. Kids pick a card type (the frame) and an effect, tap **Tag kort!**, a 5-second countdown with beeps runs, and the photo comes out as a holo trading card with a surprise superpower. Every card is saved in **Samlingen** (the gallery) on the iPad, where adults can print or share it.
+A self-service photobooth for a 9th birthday party, running on an iPad. Kids pick a card type (the frame) and an effect, tap **Tag billede!**, a 5-second countdown with beeps runs, and the photo comes out as a holo trading card with a surprise superpower. Every card is saved in **Samlingen** (the gallery) on the iPad, where adults can print or share it.
 
 ## Develop
 

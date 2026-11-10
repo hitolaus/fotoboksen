@@ -143,3 +143,43 @@ export const slotRect = (s: StickerSlot, scale = 1): Rect => ({
   w: s.size * scale,
   h: s.size * scale,
 });
+
+/** The Blokland print: the same 1050 x 1400 grid (3:4), framed by one row of 70-unit blocks. */
+export const BLOCK = 70;
+export const BLOK_W = 1050;
+export const BLOK_H = 1400;
+
+export interface BlokLayout {
+  page: Rect;
+  photo: Rect;
+  band: Rect;
+  banner: Rect;
+  /** where the kids' faces usually are; items and the banner stay out of it */
+  faces: Rect;
+}
+
+const BLOK_BASE: BlokLayout = {
+  page: { x: 0, y: 0, w: BLOK_W, h: BLOK_H },
+  photo: { x: BLOCK, y: BLOCK, w: BLOK_W - 2 * BLOCK, h: 15 * BLOCK },
+  band: { x: 0, y: 16 * BLOCK, w: BLOK_W, h: 4 * BLOCK },
+  banner: { x: 160, y: 104, w: 730, h: 212 },
+  faces: { x: 150, y: 340, w: 750, h: 780 },
+};
+
+export function blokLayout(scale = 1): BlokLayout {
+  const out = {} as BlokLayout;
+  for (const key of Object.keys(BLOK_BASE) as (keyof BlokLayout)[]) out[key] = scaleRect(BLOK_BASE[key], scale);
+  return out;
+}
+
+/** Item positions: two in the top corners beside the banner, the rest straddling the side edges. */
+export const ITEM_SLOTS: StickerSlot[] = [
+  { x: 96, y: 128, size: 104, rot: 0 },
+  { x: 954, y: 128, size: 104, rot: 0 },
+  { x: 70, y: 452, size: 84, rot: 0 },
+  { x: 980, y: 540, size: 84, rot: 0 },
+  { x: 70, y: 760, size: 90, rot: 0 },
+  { x: 980, y: 860, size: 84, rot: 0 },
+  { x: 70, y: 1040, size: 84, rot: 0 },
+  { x: 980, y: 1064, size: 90, rot: 0 },
+];

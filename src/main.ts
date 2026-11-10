@@ -3,6 +3,7 @@ import '@fontsource/baloo-2/latin-600.css';
 import '@fontsource/baloo-2/latin-800.css';
 import '@fontsource/anton/latin-400.css';
 import '@fontsource/mochiy-pop-one/latin-400.css';
+import '@fontsource/pixelify-sans/latin-700.css';
 import './style.css';
 
 import { EFFECTS, type EffectId } from './effects';
@@ -13,7 +14,7 @@ import { cardNumberLabel } from './powers';
 import { CardStore, type CardRecord } from './store';
 import { uiIcon } from './icons';
 import { COUNTDOWN_SECONDS, RESULT_IDLE_SECONDS } from './config';
-import { THEMES, loadThemePref, saveThemePref, themeOf, isThemeId, visibleThemes, type Theme, type ThemeId } from './themes';
+import { THEMES, themeOf, isThemeId, visibleThemes, type Theme, type ThemeId } from './themes';
 import {
   beep,
   CameraError,
@@ -32,17 +33,9 @@ const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getEleme
 const video = $<HTMLVideoElement>('video');
 const preview = $<HTMLCanvasElement>('preview');
 const pctx = preview.getContext('2d')!;
-const prefs = (() => {
-  try {
-    return window.localStorage;
-  } catch {
-    return undefined;
-  }
-})();
-
 const state = {
   screen: 'start' as Screen,
-  theme: THEMES[loadThemePref(prefs)] as Theme,
+  theme: THEMES.kort as Theme,
   frame: '',
   effect: 'normal' as EffectId,
   nextNumber: 1,
@@ -429,7 +422,6 @@ async function boot() {
   $('viewer-close').innerHTML = `${uiIcon('close')}<span>Luk</span>`;
   attachTilt($('result-card'));
   attachTilt($('viewer-card'));
-  document.querySelector(`[data-theme-pick="${state.theme.id}"]`)?.classList.add('last');
 
   try {
     store = await CardStore.open();
@@ -443,14 +435,16 @@ async function boot() {
   renderThemePicks();
 }
 
-/** One tile per offered theme: a sunburst card back for Samlekort and Kawaii, a finished sample picture for the others. */
+/** One tile per offered theme: a sunburst card back in the theme's colours, or a finished sample picture for a theme without one. */
 function renderThemePicks() {
   const host = $('theme-picks');
+  // tile size is shared out between however many themes are offered
+  host.style.setProperty('--count', String(visibleThemes().length));
   host.innerHTML = visibleThemes()
     .map(
-      (t) => `<button class="theme-pick${t.id === state.theme.id ? ' last' : ''}" type="button" data-theme-pick="${t.id}">
+      (t) => `<button class="theme-pick" type="button" data-theme-pick="${t.id}">
         ${
-          t.id === 'kort' || t.id === 'kawaii'
+          t.id === 'kort' || t.id === 'kawaii' || t.id === 'blokland'
             ? `<span class="card-back card-back-${t.id} theme-art"><span class="card-back-title">${t.name}</span></span>`
             : `<canvas class="theme-tile theme-art" style="--ratio:${t.width} / ${t.height}" aria-hidden="true"></canvas>`
         }
@@ -484,8 +478,6 @@ $('theme-picks').addEventListener('click', async (e) => {
     void keepAwake();
     void navigator.storage?.persist?.();
   }
-  saveThemePref(prefs, id);
-  for (const b of document.querySelectorAll('[data-theme-pick]')) b.classList.toggle('last', b === btn);
   show('booth');
   applyTheme(id);
 });
