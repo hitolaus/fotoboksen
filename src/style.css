@@ -97,11 +97,15 @@ body[data-screen='gallery'] #gallery {
   aspect-ratio: 5 / 7;
   border-radius: 5.2% / 3.7%;
   background:
-    radial-gradient(circle at 50% 50%, transparent 0 34%, rgb(255 207 31 / 0.14) 34.4% 35%, transparent 35.4%),
-    repeating-conic-gradient(from 0deg at 50% 50%, var(--navy-3) 0 10deg, var(--navy-2) 10deg 20deg);
+    radial-gradient(circle at 50% 50%, transparent 0 34%, var(--back-ring, rgb(255 207 31 / 0.14)) 34.4% 35%, transparent 35.4%),
+    repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      var(--back-ray-a, var(--navy-3)) 0 10deg,
+      var(--back-ray-b, var(--navy-2)) 10deg 20deg
+    );
   box-shadow:
-    inset 0 0 0 clamp(10px, 2.2vw, 22px) var(--gold),
-    inset 0 0 0 clamp(14px, 2.8vw, 28px) var(--gold-deep),
+    inset 0 0 0 clamp(10px, 2.2vw, 22px) var(--back-rim, var(--gold)),
+    inset 0 0 0 clamp(14px, 2.8vw, 28px) var(--back-rim-deep, var(--gold-deep)),
     0 24px 60px rgb(0 0 0 / 0.45);
   display: grid;
   place-content: center;
@@ -133,6 +137,22 @@ body[data-screen='gallery'] #gallery {
 .card-back-sub {
   font-weight: 800;
   font-size: clamp(20px, 2.4vw, 28px);
+}
+
+/* the Kawaii start tile: the same sunburst card back, in the purikura's pink and purple */
+.card-back-kawaii {
+  --back-ray-a: #a43be0;
+  --back-ray-b: #e0268a;
+  --back-ring: rgb(255 255 255 / 0.22);
+  --back-rim: #ffffff;
+  --back-rim-deep: #ffa3d1;
+}
+
+.card-back-kawaii .card-back-title {
+  font-family: 'Mochiy Pop One', sans-serif;
+  font-size: clamp(34px, 6vw, 64px);
+  color: #ffffff;
+  text-shadow: 0 4px 16px rgb(90 18 144 / 0.6);
 }
 
 @keyframes foil-drift {
@@ -179,8 +199,10 @@ body[data-screen='gallery'] #gallery {
 }
 
 .theme-art {
-  height: 100%;
+  /* as tall as the row allows, but never so wide that two tiles overflow a portrait screen (5:7 tiles) */
+  height: min(100%, calc((100vw - 2 * var(--pad) - clamp(24px, 5vw, 72px)) / 2 * 1.4));
   min-height: 0;
+  align-self: center;
 }
 
 .theme-name {
@@ -1217,6 +1239,19 @@ body[data-theme='kawaii'] .result-power {
 @media (orientation: portrait) {
   :root {
     --chip-h: clamp(56px, 7.4dvh, 84px);
+  }
+
+  /* in portrait the screen's width sets the tile size, so the name plate follows right under it */
+  .theme-picks {
+    align-items: center;
+  }
+
+  .theme-pick {
+    grid-template-rows: auto auto;
+  }
+
+  .theme-art {
+    height: calc((100vw - 2 * var(--pad) - clamp(24px, 5vw, 72px)) / 2 * 1.4);
   }
 
   #booth {

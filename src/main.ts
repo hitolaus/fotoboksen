@@ -437,15 +437,15 @@ async function boot() {
   renderThemePicks();
 }
 
-/** One tile per offered theme: the card back for Samlekort, a finished sample picture for the others. */
+/** One tile per offered theme: a sunburst card back for Samlekort and Kawaii, a finished sample picture for the others. */
 function renderThemePicks() {
   const host = $('theme-picks');
   host.innerHTML = visibleThemes()
     .map(
       (t) => `<button class="theme-pick${t.id === state.theme.id ? ' last' : ''}" type="button" data-theme-pick="${t.id}">
         ${
-          t.id === 'kort'
-            ? `<span class="card-back theme-art"><span class="card-back-title">${t.name}</span></span>`
+          t.id === 'kort' || t.id === 'kawaii'
+            ? `<span class="card-back card-back-${t.id} theme-art"><span class="card-back-title">${t.name}</span></span>`
             : `<canvas class="theme-tile theme-art" style="--ratio:${t.width} / ${t.height}" aria-hidden="true"></canvas>`
         }
         <span class="theme-name">${t.name}</span></button>`,

@@ -50,7 +50,6 @@ export const PAINTERS: Record<ThemeId, Painter> = {
 /** Sample surprises for the start screen tiles, so each tile looks like a finished picture. */
 const TILE_SURPRISE: Partial<Record<ThemeId, Surprise>> = {
   forside: { text: 'Ugens største smil', burst: 'NYHED!', teaser: '+ Vind en ballon' },
-  kawaii: { text: 'Kawaii!' },
 };
 
 /** A start-screen tile: the theme's real drawing over a drawn party scene standing in for the camera. */
