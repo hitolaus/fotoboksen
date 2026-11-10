@@ -1,4 +1,4 @@
-import { AGE, CARD_TITLE } from './config';
+import { CARD_BADGE, CARD_TITLE } from './config';
 import { cardLayout, coverCrop, type CardLayout, type Rect, CARD_W, CARD_H } from './geometry';
 import { applyPixelEffect, pixelBlock, type EffectId } from './effects';
 import type { CardType } from './cardTypes';
@@ -106,7 +106,7 @@ export function drawChrome(ctx: CanvasRenderingContext2D, L: CardLayout, s: numb
   }
   ctx.restore();
 
-  // title row: party title, age and element badge
+  // title row: party title, class and element badge
   const badgeR = 46 * s;
   const badgeX = L.title.x + L.title.w - badgeR;
   const midY = L.title.y + L.title.h / 2;
@@ -121,12 +121,12 @@ export function drawChrome(ctx: CanvasRenderingContext2D, L: CardLayout, s: numb
   ctx.textBaseline = 'alphabetic';
   ctx.textAlign = 'right';
   ctx.font = `${62 * s}px ${DISPLAY}`;
-  const ageText = `${AGE} år`;
-  const ageX = badgeX - badgeR - 18 * s;
-  ctx.fillText(ageText, ageX, midY + 22 * s);
-  const ageW = ctx.measureText(ageText).width;
+  const badgeText = CARD_BADGE;
+  const badgeTextX = badgeX - badgeR - 18 * s;
+  ctx.fillText(badgeText, badgeTextX, midY + 22 * s);
+  const badgeTextW = ctx.measureText(badgeText).width;
   ctx.textAlign = 'left';
-  fitText(ctx, CARD_TITLE, (px) => `${px}px ${DISPLAY}`, 78 * s, ageX - ageW - 30 * s - L.title.x);
+  fitText(ctx, CARD_TITLE, (px) => `${px}px ${DISPLAY}`, 78 * s, badgeTextX - badgeTextW - 30 * s - L.title.x);
   ctx.fillText(CARD_TITLE, L.title.x + 6 * s, midY + 27 * s);
 
   // cream mat round the photo

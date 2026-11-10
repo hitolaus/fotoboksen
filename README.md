@@ -28,7 +28,7 @@ Or from the terminal: `npx wrangler pages deploy dist`.
 2. Tap the card to start and allow the camera.
 3. Lock the iPad into the app: Settings › Accessibility › **Guided Access** on, then triple-click the top button inside the app. This also blocks the home gesture.
 4. Plug in the charger. The app asks the screen to stay on; if the iPad dims anyway, set Settings › Display & Brightness › Auto-Lock to Never.
-5. Before the party, edit `src/config.ts` for the card title, age and countdown length.
+5. Before the party, edit `src/config.ts` for the card title, the class shown on the card (2.B) and the countdown length.
 
 ## Photos
 

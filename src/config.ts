@@ -1,6 +1,7 @@
 /** Party-specific text printed on every card. Change before the party. */
 export const CARD_TITLE = 'Fødselsdag';
-export const AGE = 9;
+/** Shown next to the element badge at the top right of every card: the class. */
+export const CARD_BADGE = '2.B';
 
 /** Seconds from tapping "Tag kort!" to the photo, long enough to run back into the picture. */
 export const COUNTDOWN_SECONDS = 5;
