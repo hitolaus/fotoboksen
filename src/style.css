@@ -78,7 +78,7 @@ h2 {
 
 .screen {
   display: none;
-  height: 100dvh;
+  height: 100%;
   padding: max(var(--pad), env(safe-area-inset-top)) max(var(--pad), env(safe-area-inset-right))
     max(var(--pad), env(safe-area-inset-bottom)) max(var(--pad), env(safe-area-inset-left));
 }
@@ -88,6 +88,20 @@ body[data-screen='booth'] #booth,
 body[data-screen='result'] #result,
 body[data-screen='gallery'] #gallery {
   display: grid;
+}
+
+/*
+ * The app is one fixed layer over the whole screen. In a Home Screen web app on iPad the
+ * viewport-height units come out shorter than the screen (the status bar is left out), which
+ * left a strip at the bottom showing the background starting over. A fixed layer with inset 0
+ * always covers the real screen; it paints the theme's background itself (inherited from body),
+ * and main.ts publishes its height as --app-h for the few sizes that are worked out from the
+ * screen height.
+ */
+main {
+  position: fixed;
+  inset: 0;
+  background: inherit;
 }
 
 /* ---------- card back (start screen, flip reveal) ---------- */
@@ -242,7 +256,7 @@ body[data-screen='gallery'] #gallery {
 .theme-art {
   /* as tall as the screen allows below the title (300px for title, name plate and hint), but never so wide that the tiles overflow */
   height: min(
-    calc(100dvh - 300px),
+    calc(var(--app-h, 100dvh) - 300px),
     calc((100vw - 2 * var(--pad) - (var(--count, 2) - 1) * clamp(24px, 5vw, 72px)) / var(--count, 2) * 1.4)
   );
   min-height: 0;
@@ -796,7 +810,7 @@ body[data-counting] .shutter-row {
 }
 
 .result-stage {
-  height: calc(100dvh - 2 * var(--pad));
+  height: calc(var(--app-h, 100dvh) - 2 * var(--pad));
   display: flex;
   justify-content: center;
 }
@@ -1086,9 +1100,9 @@ body[data-counting] .shutter-row {
   background: transparent;
   color: var(--cream);
   max-width: 100vw;
-  max-height: 100dvh;
+  max-height: var(--app-h, 100dvh);
   width: 100vw;
-  height: 100dvh;
+  height: var(--app-h, 100dvh);
   grid-template-columns: auto auto;
   justify-content: center;
   align-items: center;
@@ -1104,7 +1118,7 @@ body[data-counting] .shutter-row {
 }
 
 .viewer .tilt {
-  height: calc(100dvh - 2 * var(--pad));
+  height: calc(var(--app-h, 100dvh) - 2 * var(--pad));
 }
 
 .viewer-actions {
@@ -1893,7 +1907,7 @@ body[data-theme='stumfilm'] .countdown-hint {
 
   .theme-art {
     height: min(
-      calc((100dvh - 420px) / 2),
+      calc((var(--app-h, 100dvh) - 420px) / 2),
       calc((100vw - 2 * var(--pad) - clamp(24px, 5vw, 72px)) / 2 * 1.4)
     );
   }

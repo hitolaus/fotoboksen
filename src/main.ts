@@ -191,6 +191,10 @@ function frame() {
 
 new ResizeObserver(sizePreview).observe(preview);
 
+/** The real screen height (see `main` in style.css), for CSS sizes worked out from it. */
+const app = document.querySelector('main')!;
+new ResizeObserver(() => document.documentElement.style.setProperty('--app-h', `${app.clientHeight}px`)).observe(app);
+
 /* ---------- countdown and capture ---------- */
 
 let cancelCountdown: (() => void) | undefined;
