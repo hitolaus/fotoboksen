@@ -25,10 +25,11 @@ Or from the terminal: `npx wrangler pages deploy dist`.
 ## Party setup on the iPad
 
 1. Open the site in Safari, tap Share › **Add to Home Screen**, and open it from the Home Screen icon (no Safari bars; the time and battery sit on a bar at the top that takes the colour of the theme on screen). If you change the status bar or manifest settings later, remove the icon and add it again: iPadOS only reads them when the app is added.
-2. Tap the card to start and allow the camera.
-3. Lock the iPad into the app: Settings › Accessibility › **Guided Access** on, then triple-click the top button inside the app. This also blocks the home gesture.
-4. Plug in the charger. The app asks the screen to stay on; if the iPad dims anyway, set Settings › Display & Brightness › Auto-Lock to Never.
-5. Before the party, edit `src/config.ts` for the card title, the class shown on the card (2.B) and the countdown length.
+2. **Offline:** open the Home Screen app once while the iPad is online and leave it open for a few seconds. It stores the whole app on the iPad, and from then on it opens and works with Wi-Fi and mobile data off. Test it: turn on Flight Mode, close the app from the app switcher, and open it again. The Home Screen app keeps its own copy, separate from Safari, so opening the site in Safari does not count. After deploying a new version, open the app online, then close it from the app switcher and open it again: the new version takes over only after the old one has been closed.
+3. Tap the card to start and allow the camera.
+4. Lock the iPad into the app: Settings › Accessibility › **Guided Access** on, then triple-click the top button inside the app. This also blocks the home gesture.
+5. Plug in the charger. The app asks the screen to stay on; if the iPad dims anyway, set Settings › Display & Brightness › Auto-Lock to Never.
+6. Before the party, edit `src/config.ts` for the card title, the class shown on the card (2.B) and the countdown length.
 
 ## Photos
 

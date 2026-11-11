@@ -600,6 +600,11 @@ function renderThemePicks() {
 
 const booting = boot();
 
+// Store the app on the device so the Home Screen app opens without network.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  void navigator.serviceWorker.register('/sw.js');
+}
+
 $('theme-picks').addEventListener('click', async (e) => {
   const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-theme-pick]');
   const id = btn?.dataset.themePick;
